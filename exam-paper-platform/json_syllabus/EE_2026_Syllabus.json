@@ -1,0 +1,815 @@
+{
+  "subject": "Electrical Engineering",
+  "topics": [
+    {
+      "name": "Engineering Mathematics",
+      "subtopics": [
+        {
+          "name": "Linear Algebra",
+          "concepts": [
+            {
+              "name": "Matrix Algebra"
+            },
+            {
+              "name": "Systems of linear equations"
+            },
+            {
+              "name": "Eigen values"
+            },
+            {
+              "name": "Eigen vectors"
+            }
+          ]
+        },
+        {
+          "name": "Calculus",
+          "concepts": [
+            {
+              "name": "Mean value theorems"
+            },
+            {
+              "name": "Theorems of integral calculus"
+            },
+            {
+              "name": "Evaluation of definite and"
+            }
+          ]
+        },
+        {
+          "name": "Engineering Mathematics",
+          "concepts": [
+            {
+              "name": "improper integrals"
+            },
+            {
+              "name": "Partial Derivatives"
+            },
+            {
+              "name": "Maxima and minima"
+            },
+            {
+              "name": "Multiple integrals"
+            },
+            {
+              "name": "Fourier"
+            },
+            {
+              "name": "series"
+            },
+            {
+              "name": "Vector identities"
+            },
+            {
+              "name": "Directional derivatives"
+            },
+            {
+              "name": "Line integral"
+            },
+            {
+              "name": "Surface integral"
+            },
+            {
+              "name": "Volume"
+            },
+            {
+              "name": "integral"
+            },
+            {
+              "name": "Stokes’s theorem"
+            },
+            {
+              "name": "Gauss’s theorem"
+            },
+            {
+              "name": "Divergence theorem"
+            },
+            {
+              "name": "Green’s theorem"
+            },
+            {
+              "name": "differential equations with constant coefficients"
+            },
+            {
+              "name": "Method of variation of parameters"
+            },
+            {
+              "name": "Cauchy’s equation"
+            },
+            {
+              "name": "Euler’s equation"
+            },
+            {
+              "name": "Initial and boundary value problems"
+            },
+            {
+              "name": "Partial"
+            },
+            {
+              "name": "Differential Equations"
+            },
+            {
+              "name": "Method of separation of variables"
+            },
+            {
+              "name": "Taylor series"
+            },
+            {
+              "name": "Laurent series"
+            },
+            {
+              "name": "Residue theorem"
+            },
+            {
+              "name": "Solution integrals"
+            },
+            {
+              "name": "Mode"
+            },
+            {
+              "name": "Standard Deviation"
+            },
+            {
+              "name": "Random variables"
+            },
+            {
+              "name": "Discrete and Continuous distributions"
+            },
+            {
+              "name": "Poisson distribution"
+            },
+            {
+              "name": "Normal distribution"
+            },
+            {
+              "name": "Binomial distribution"
+            },
+            {
+              "name": "Correlation analysis"
+            }
+          ]
+        },
+        {
+          "name": "Differential Equations",
+          "concepts": [
+            {
+              "name": "First order equations (linear and nonlinear)"
+            },
+            {
+              "name": "Higher order linear"
+            }
+          ]
+        },
+        {
+          "name": "Complex Variables",
+          "concepts": [
+            {
+              "name": "Analytic functions"
+            },
+            {
+              "name": "Cauchy’s integral theorem"
+            },
+            {
+              "name": "Cauchy’s integral formula"
+            }
+          ]
+        },
+        {
+          "name": "Probability and Statistics",
+          "concepts": [
+            {
+              "name": "Sampling theorems"
+            },
+            {
+              "name": "Conditional probability"
+            },
+            {
+              "name": "Mean"
+            },
+            {
+              "name": "Median"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electric circuits",
+      "subtopics": [
+        {
+          "name": "Network Elements",
+          "concepts": [
+            {
+              "name": "Ideal voltage and current sources"
+            },
+            {
+              "name": "dependent sources"
+            },
+            {
+              "name": "R"
+            },
+            {
+              "name": "L"
+            },
+            {
+              "name": "C"
+            },
+            {
+              "name": "M"
+            }
+          ]
+        },
+        {
+          "name": "elements; Network solution methods",
+          "concepts": [
+            {
+              "name": "KCL"
+            },
+            {
+              "name": "KVL"
+            },
+            {
+              "name": "Node and Mesh analysis"
+            },
+            {
+              "name": "Network"
+            }
+          ]
+        },
+        {
+          "name": "Theorems",
+          "concepts": [
+            {
+              "name": "Thevenin’s"
+            },
+            {
+              "name": "Norton’s"
+            },
+            {
+              "name": "Superposition and Maximum Power Transfer theorem"
+            }
+          ]
+        },
+        {
+          "name": "Electric circuits",
+          "concepts": [
+            {
+              "name": "Transient response of DC and AC networks"
+            },
+            {
+              "name": "sinusoidal steady-state analysis"
+            },
+            {
+              "name": "resonance"
+            },
+            {
+              "name": "two port networks"
+            },
+            {
+              "name": "balanced three phase circuits"
+            },
+            {
+              "name": "star-delta transformation"
+            },
+            {
+              "name": "complex power"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electromagnetic Fields",
+      "subtopics": [
+        {
+          "name": "Electromagnetic Fields",
+          "concepts": [
+            {
+              "name": "Coulomb's Law"
+            },
+            {
+              "name": "Electric Field Intensity"
+            },
+            {
+              "name": "Electric Flux Density"
+            },
+            {
+              "name": "Gauss's Law"
+            },
+            {
+              "name": "Divergence"
+            },
+            {
+              "name": "Electric field and potential due to point"
+            },
+            {
+              "name": "line"
+            },
+            {
+              "name": "plane and spherical charge distributions"
+            },
+            {
+              "name": "Effect"
+            },
+            {
+              "name": "of dielectric medium"
+            },
+            {
+              "name": "Capacitance of simple configurations"
+            },
+            {
+              "name": "Biot‐Savart’s law"
+            },
+            {
+              "name": "Ampere’s"
+            },
+            {
+              "name": "law"
+            },
+            {
+              "name": "Curl"
+            },
+            {
+              "name": "Faraday’s law"
+            },
+            {
+              "name": "Lorentz force"
+            },
+            {
+              "name": "Inductance"
+            },
+            {
+              "name": "Magnetomotive force"
+            },
+            {
+              "name": "Reluctance"
+            },
+            {
+              "name": "Magnetic circuits"
+            },
+            {
+              "name": "Self and Mutual inductance of simple configurations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Signals and Systems",
+      "subtopics": [
+        {
+          "name": "Signals and Systems",
+          "concepts": [
+            {
+              "name": "Representation of continuous and discrete time signals"
+            },
+            {
+              "name": "shifting and scaling properties"
+            },
+            {
+              "name": "linear time invariant and causal systems"
+            },
+            {
+              "name": "Fourier series representation of continuous and"
+            },
+            {
+              "name": "discrete time periodic signals"
+            },
+            {
+              "name": "sampling theorem"
+            },
+            {
+              "name": "Applications of Fourier Transform for"
+            },
+            {
+              "name": "continuous and discrete time signals"
+            },
+            {
+              "name": "Laplace Transform and Z transform. R.M.S. value"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electrical Machines",
+      "subtopics": [
+        {
+          "name": "Single phase transformer",
+          "concepts": [
+            {
+              "name": "equivalent circuit"
+            },
+            {
+              "name": "phasor diagram"
+            },
+            {
+              "name": "open circuit and short"
+            }
+          ]
+        },
+        {
+          "name": "circuit tests, regulation and efficiency; Three-phase transformers",
+          "concepts": [
+            {
+              "name": "connections"
+            },
+            {
+              "name": "vector"
+            }
+          ]
+        },
+        {
+          "name": "Electrical Machines",
+          "concepts": [
+            {
+              "name": "groups"
+            },
+            {
+              "name": "parallel operation"
+            },
+            {
+              "name": "Auto-transformer"
+            },
+            {
+              "name": "Electromechanical energy conversion"
+            },
+            {
+              "name": "mode of operation and their characteristics"
+            },
+            {
+              "name": "speed control of dc motors"
+            },
+            {
+              "name": "Three-phase"
+            },
+            {
+              "name": "characteristics"
+            },
+            {
+              "name": "no-load and blocked-rotor tests"
+            },
+            {
+              "name": "equivalent circuit"
+            },
+            {
+              "name": "starting and speed"
+            },
+            {
+              "name": "cylindrical and salient pole machines"
+            },
+            {
+              "name": "performance and characteristics"
+            },
+            {
+              "name": "regulation and parallel"
+            },
+            {
+              "name": "operation of generators"
+            },
+            {
+              "name": "starting of synchronous motors"
+            },
+            {
+              "name": "Types of losses and efficiency"
+            }
+          ]
+        },
+        {
+          "name": "principles; DC machines",
+          "concepts": [
+            {
+              "name": "separately excited"
+            },
+            {
+              "name": "series and shunt"
+            },
+            {
+              "name": "motoring and generating"
+            }
+          ]
+        },
+        {
+          "name": "induction machines",
+          "concepts": [
+            {
+              "name": "principle of operation"
+            },
+            {
+              "name": "types"
+            },
+            {
+              "name": "performance"
+            },
+            {
+              "name": "torque-speed"
+            }
+          ]
+        },
+        {
+          "name": "control; Operating principle of single-phase induction motors; Synchronous machines",
+          "concepts": []
+        }
+      ]
+    },
+    {
+      "name": "Power Systems",
+      "subtopics": [
+        {
+          "name": "Power Systems",
+          "concepts": [
+            {
+              "name": "Basic concepts of electrical power generation"
+            },
+            {
+              "name": "AC and DC transmission concepts"
+            },
+            {
+              "name": "Models and"
+            },
+            {
+              "name": "performance of transmission lines and cables"
+            },
+            {
+              "name": "Economic Load Dispatch (with and"
+            },
+            {
+              "name": "without considering transmission losses)"
+            },
+            {
+              "name": "Series and shunt compensation"
+            },
+            {
+              "name": "Electric field"
+            },
+            {
+              "name": "distribution and insulators"
+            },
+            {
+              "name": "Distribution systems"
+            },
+            {
+              "name": "Per‐unit quantities"
+            },
+            {
+              "name": "Bus admittance"
+            },
+            {
+              "name": "matrix"
+            },
+            {
+              "name": "Gauss- Seidel and Newton-Raphson load flow methods"
+            },
+            {
+              "name": "Voltage and Frequency control"
+            },
+            {
+              "name": "Power factor correction"
+            },
+            {
+              "name": "Symmetrical components"
+            },
+            {
+              "name": "Symmetrical and unsymmetrical"
+            },
+            {
+              "name": "fault analysis"
+            },
+            {
+              "name": "Principles of over‐current"
+            },
+            {
+              "name": "differential"
+            },
+            {
+              "name": "directional and distance protection"
+            },
+            {
+              "name": "Circuit breakers"
+            },
+            {
+              "name": "System stability concepts"
+            },
+            {
+              "name": "Equal area criterion"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Control Systems",
+      "subtopics": [
+        {
+          "name": "Control Systems",
+          "concepts": [
+            {
+              "name": "Mathematical modelling and representation of systems"
+            },
+            {
+              "name": "Feedback principle"
+            },
+            {
+              "name": "transfer function"
+            },
+            {
+              "name": "Block diagrams and Signal flow graphs"
+            },
+            {
+              "name": "Transient and Steady‐state analysis of linear"
+            },
+            {
+              "name": "time invariant systems"
+            },
+            {
+              "name": "Stability analysis using Routh-Hurwitz and Nyquist criteria"
+            },
+            {
+              "name": "Bode plots"
+            },
+            {
+              "name": "Root loci"
+            },
+            {
+              "name": "Lag"
+            },
+            {
+              "name": "Lead and Lead‐Lag compensators"
+            },
+            {
+              "name": "P"
+            },
+            {
+              "name": "PI and PID controllers"
+            },
+            {
+              "name": "State space"
+            },
+            {
+              "name": "model"
+            },
+            {
+              "name": "Solution of state equations of LTI systems"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electrical and Electronic Measurements",
+      "subtopics": [
+        {
+          "name": "Electrical and Electronic Measurements",
+          "concepts": [
+            {
+              "name": "Bridges and Potentiometers"
+            },
+            {
+              "name": "Measurement of voltage"
+            },
+            {
+              "name": "current"
+            },
+            {
+              "name": "power"
+            },
+            {
+              "name": "energy and power"
+            },
+            {
+              "name": "factor"
+            },
+            {
+              "name": "Instrument transformers"
+            },
+            {
+              "name": "Digital voltmeters and multi-meters"
+            },
+            {
+              "name": "Phase"
+            },
+            {
+              "name": "Time and"
+            },
+            {
+              "name": "Frequency measurement"
+            },
+            {
+              "name": "Oscilloscopes"
+            },
+            {
+              "name": "Error analysis"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Analog and Digital Electronics",
+      "subtopics": [
+        {
+          "name": "Simple diode circuits",
+          "concepts": [
+            {
+              "name": "clipping"
+            },
+            {
+              "name": "clamping"
+            },
+            {
+              "name": "rectifiers"
+            },
+            {
+              "name": "Amplifiers: biasing"
+            },
+            {
+              "name": "equivalent circuit"
+            }
+          ]
+        },
+        {
+          "name": "and frequency response; oscillators and feedback amplifiers; operational amplifiers",
+          "concepts": []
+        },
+        {
+          "name": "characteristics and applications; single stage active filters, Active Filters",
+          "concepts": [
+            {
+              "name": "Sallen Key"
+            }
+          ]
+        },
+        {
+          "name": "Analog and Digital Electronics",
+          "concepts": [
+            {
+              "name": "Butterwoth"
+            },
+            {
+              "name": "VCOs and timers"
+            },
+            {
+              "name": "combinatorial and sequential logic circuits"
+            },
+            {
+              "name": "multiplexers"
+            },
+            {
+              "name": "demultiplexers"
+            },
+            {
+              "name": "Schmitt triggers"
+            },
+            {
+              "name": "sample and hold circuits"
+            },
+            {
+              "name": "A/D and D/A converters"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Power Electronics",
+      "subtopics": [
+        {
+          "name": "Power Electronics",
+          "concepts": [
+            {
+              "name": "Static V-I characteristics and firing/gating circuits for Thyristor"
+            },
+            {
+              "name": "MOSFET"
+            },
+            {
+              "name": "IGBT"
+            },
+            {
+              "name": "DC to DC"
+            },
+            {
+              "name": "inverters"
+            },
+            {
+              "name": "sinusoidal pulse width modulation"
+            }
+          ]
+        },
+        {
+          "name": "conversion",
+          "concepts": [
+            {
+              "name": "Buck"
+            },
+            {
+              "name": "Boost and Buck-Boost Converters"
+            },
+            {
+              "name": "Single and three-phase configuration of"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

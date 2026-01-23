@@ -1,0 +1,30 @@
+# Global ignores
+.DS_Store
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Environment files
+.env
+.env.*
+*.env
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+*.log
+logs/
+
+# Build artifacts
+build/
+dist/
+
+# IDE settings
+.idea/
+.vscode/
+*.code-workspace

@@ -1,0 +1,46 @@
+# Bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+.envrc
+
+# Environment and secrets
+.env
+.env.*
+*.env
+
+# Packaging and build artifacts
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Test and coverage output
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Type checker caches
+.mypy_cache/
+.pytype/
+.ruff_cache/
+
+# Project tooling
+.DS_Store
+.idea/
+.vscode/
+*.code-workspace
+
+# Local databases and scratch data
+*.sqlite3
+data/
+
+# Logs
+*.log
+logs/
