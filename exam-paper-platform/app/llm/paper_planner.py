@@ -12,6 +12,7 @@ class PaperBlueprint:
     total_questions: int
     distribution: Dict[str, int]
     questions: List[BlueprintItem]
+    subject: str
 
 
 from app.graph.queries import (
@@ -21,9 +22,11 @@ from app.graph.queries import (
 )
 import random
 
+
 def build_paper_blueprint(
     total_questions: int = 65,
-    cutoff_year: int = 2019
+    cutoff_year: int = 2019,
+    subject: str | None = None
 ):
     blueprint = []
 
@@ -37,9 +40,9 @@ def build_paper_blueprint(
     # -----------------------------
     # Retrieve concepts
     # -----------------------------
-    high_freq = get_high_frequency_concepts(hf_count)
-    recency_gap = get_recency_gap_concepts(cutoff_year, rg_count)
-    never_asked = get_never_asked_concepts(na_count)
+    high_freq = get_high_frequency_concepts(hf_count, subject=subject)
+    recency_gap = get_recency_gap_concepts(cutoff_year, rg_count, subject=subject)
+    never_asked = get_never_asked_concepts(na_count, subject=subject)
 
     # -----------------------------
     # Assign difficulty
@@ -89,5 +92,6 @@ def build_paper_blueprint(
             "recency_gap": rg_count,
             "never_asked": na_count
         },
-        questions=blueprint
+        questions=blueprint,
+        subject=subject or ""
     )

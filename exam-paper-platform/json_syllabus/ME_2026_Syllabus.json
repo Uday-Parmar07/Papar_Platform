@@ -1,0 +1,714 @@
+{
+  "subject": "ME 2026",
+  "topics": [
+    {
+      "name": "Engineering Mathematics",
+      "subtopics": [
+        {
+          "name": "Linear Algebra",
+          "concepts": [
+            {
+              "name": "Matrix algebra"
+            },
+            {
+              "name": "systems of linear equations"
+            },
+            {
+              "name": "eigen values and eigen vectors"
+            }
+          ]
+        },
+        {
+          "name": "Calculus",
+          "concepts": [
+            {
+              "name": "Functions of single variable"
+            },
+            {
+              "name": "limit"
+            },
+            {
+              "name": "continuity and differentiability"
+            },
+            {
+              "name": "mean value"
+            }
+          ]
+        },
+        {
+          "name": "Engineering Mathematics",
+          "concepts": [
+            {
+              "name": "theorems"
+            },
+            {
+              "name": "indeterminate forms"
+            },
+            {
+              "name": "evaluation of definite and improper integrals"
+            },
+            {
+              "name": "double and triple"
+            },
+            {
+              "name": "integrals"
+            },
+            {
+              "name": "partial derivatives"
+            },
+            {
+              "name": "total derivative"
+            },
+            {
+              "name": "Taylor series (in one and two variables)"
+            },
+            {
+              "name": "maxima and"
+            },
+            {
+              "name": "minima"
+            },
+            {
+              "name": "Fourier series"
+            },
+            {
+              "name": "gradient"
+            },
+            {
+              "name": "divergence and curl"
+            },
+            {
+              "name": "vector identities"
+            },
+            {
+              "name": "directional derivatives"
+            },
+            {
+              "name": "line"
+            },
+            {
+              "name": "surface and volume integrals"
+            },
+            {
+              "name": "applications of Gauss"
+            },
+            {
+              "name": "Stokes and Green’s theorems"
+            },
+            {
+              "name": "problems"
+            },
+            {
+              "name": "Laplace transforms"
+            },
+            {
+              "name": "solutions of heat"
+            },
+            {
+              "name": "wave and Laplace's equations"
+            },
+            {
+              "name": "mean"
+            },
+            {
+              "name": "median"
+            },
+            {
+              "name": "mode and standard deviation"
+            },
+            {
+              "name": "random variables"
+            },
+            {
+              "name": "binomial"
+            },
+            {
+              "name": "Poisson and normal"
+            }
+          ]
+        },
+        {
+          "name": "Differential Equations",
+          "concepts": [
+            {
+              "name": "First order equations (linear and nonlinear)"
+            },
+            {
+              "name": "higher order linear differential"
+            }
+          ]
+        },
+        {
+          "name": "Complex Variables",
+          "concepts": [
+            {
+              "name": "Analytic functions"
+            },
+            {
+              "name": "Cauchy-Riemann equations"
+            },
+            {
+              "name": "Cauchy’s integral theorem"
+            }
+          ]
+        },
+        {
+          "name": "Probability and Statistics",
+          "concepts": [
+            {
+              "name": "Definitions of probability"
+            },
+            {
+              "name": "sampling theorems"
+            },
+            {
+              "name": "conditional probability"
+            }
+          ]
+        },
+        {
+          "name": "Numerical Methods",
+          "concepts": [
+            {
+              "name": "Numerical solutions of linear and non-linear algebraic equations"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Applied Mechanics and Design",
+      "subtopics": [
+        {
+          "name": "Engineering Mechanics",
+          "concepts": [
+            {
+              "name": "Free-body diagrams and equilibrium"
+            },
+            {
+              "name": "friction and its applications"
+            }
+          ]
+        },
+        {
+          "name": "Applied Mechanics and Design",
+          "concepts": [
+            {
+              "name": "including rolling friction"
+            },
+            {
+              "name": "belt-pulley"
+            },
+            {
+              "name": "brakes"
+            },
+            {
+              "name": "clutches"
+            },
+            {
+              "name": "screw jack"
+            },
+            {
+              "name": "wedge"
+            },
+            {
+              "name": "vehicles"
+            },
+            {
+              "name": "etc"
+            },
+            {
+              "name": "trusses"
+            },
+            {
+              "name": "S-N diagram"
+            },
+            {
+              "name": "principles of the design of machine elements such as bolted"
+            },
+            {
+              "name": "riveted and welded"
+            },
+            {
+              "name": "joints"
+            },
+            {
+              "name": "shafts"
+            },
+            {
+              "name": "gears"
+            },
+            {
+              "name": "rolling and sliding contact bearings"
+            },
+            {
+              "name": "brakes and clutches"
+            },
+            {
+              "name": "springs"
+            }
+          ]
+        },
+        {
+          "name": "Mechanics of Materials",
+          "concepts": [
+            {
+              "name": "Stress and strain"
+            },
+            {
+              "name": "elastic constants"
+            },
+            {
+              "name": "Poisson's ratio"
+            },
+            {
+              "name": "Mohr’s circle for"
+            }
+          ]
+        },
+        {
+          "name": "Theory of Machines",
+          "concepts": [
+            {
+              "name": "Displacement"
+            },
+            {
+              "name": "velocity and acceleration analysis of plane mechanisms"
+            }
+          ]
+        },
+        {
+          "name": "Vibrations",
+          "concepts": [
+            {
+              "name": "Free and forced vibration of single degree of freedom systems"
+            },
+            {
+              "name": "effect of damping"
+            }
+          ]
+        },
+        {
+          "name": "Machine Design",
+          "concepts": [
+            {
+              "name": "Design for static and dynamic loading"
+            },
+            {
+              "name": "failure theories"
+            },
+            {
+              "name": "fatigue strength and the"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Fluid Mechanics and Thermal Sciences",
+      "subtopics": [
+        {
+          "name": "Fluid Mechanics",
+          "concepts": [
+            {
+              "name": "Fluid properties"
+            },
+            {
+              "name": "fluid statics"
+            },
+            {
+              "name": "forces on submerged bodies"
+            },
+            {
+              "name": "stability of floating"
+            }
+          ]
+        },
+        {
+          "name": "Fluid Mechanics and Thermal Sciences",
+          "concepts": [
+            {
+              "name": "bodies"
+            },
+            {
+              "name": "control-volume analysis of mass"
+            },
+            {
+              "name": "momentum and energy"
+            },
+            {
+              "name": "fluid acceleration"
+            },
+            {
+              "name": "differential"
+            },
+            {
+              "name": "flow of incompressible fluids"
+            },
+            {
+              "name": "boundary layer"
+            },
+            {
+              "name": "elementary turbulent flow"
+            },
+            {
+              "name": "flow through pipes"
+            },
+            {
+              "name": "head losses in pipes"
+            },
+            {
+              "name": "bends and fittings"
+            },
+            {
+              "name": "basics of compressible fluid flow"
+            },
+            {
+              "name": "electrical analogy"
+            },
+            {
+              "name": "heat transfer through fins"
+            },
+            {
+              "name": "unsteady heat conduction"
+            },
+            {
+              "name": "lumped parameter"
+            },
+            {
+              "name": "system"
+            },
+            {
+              "name": "Heisler's charts"
+            },
+            {
+              "name": "thermal boundary layer"
+            },
+            {
+              "name": "dimensionless parameters in free and forced"
+            },
+            {
+              "name": "convective heat transfer"
+            },
+            {
+              "name": "heat transfer correlations for flow over flat plates and through pipes"
+            },
+            {
+              "name": "effect of turbulence"
+            },
+            {
+              "name": "heat exchanger performance"
+            },
+            {
+              "name": "LMTD and NTU methods"
+            },
+            {
+              "name": "radiative heat"
+            },
+            {
+              "name": "transfer"
+            },
+            {
+              "name": "Stefan- Boltzmann law"
+            },
+            {
+              "name": "Wien's displacement law"
+            },
+            {
+              "name": "black and grey surfaces"
+            },
+            {
+              "name": "view factors"
+            },
+            {
+              "name": "behavior of ideal and real gases"
+            },
+            {
+              "name": "zeroth and first laws of thermodynamics"
+            },
+            {
+              "name": "calculation of work"
+            },
+            {
+              "name": "and tables"
+            },
+            {
+              "name": "availability and irreversibility"
+            },
+            {
+              "name": "thermodynamic relations"
+            },
+            {
+              "name": "Impulse and reaction principles"
+            },
+            {
+              "name": "velocity diagrams"
+            },
+            {
+              "name": "Pelton-wheel"
+            },
+            {
+              "name": "Francis and Kaplan turbines"
+            }
+          ]
+        },
+        {
+          "name": "Heat Transfer",
+          "concepts": [
+            {
+              "name": "Modes of heat transfer"
+            },
+            {
+              "name": "one dimensional heat conduction"
+            },
+            {
+              "name": "resistance concept and"
+            }
+          ]
+        },
+        {
+          "name": "Thermodynamics",
+          "concepts": [
+            {
+              "name": "Thermodynamic systems and processes"
+            },
+            {
+              "name": "properties of pure substances"
+            }
+          ]
+        },
+        {
+          "name": "Applications",
+          "concepts": [
+            {
+              "name": "Power Engineering: Air and gas compressors"
+            },
+            {
+              "name": "vapour and gas power cycles"
+            }
+          ]
+        },
+        {
+          "name": "concepts of regeneration and reheat. I.C. Engines",
+          "concepts": [
+            {
+              "name": "Air-standard Otto"
+            },
+            {
+              "name": "Diesel and dual cycles"
+            }
+          ]
+        },
+        {
+          "name": "Refrigeration and air-conditioning",
+          "concepts": [
+            {
+              "name": "Vapour and gas refrigeration and heat pump cycles"
+            }
+          ]
+        },
+        {
+          "name": "properties of moist air, psychrometric chart, basic psychrometric processes. Turbomachinery",
+          "concepts": []
+        }
+      ]
+    },
+    {
+      "name": "Materials, Manufacturing and Industrial Engineering",
+      "subtopics": [
+        {
+          "name": "Engineering Materials",
+          "concepts": [
+            {
+              "name": "Structure and properties of engineering materials"
+            },
+            {
+              "name": "phase diagrams"
+            },
+            {
+              "name": "heat"
+            }
+          ]
+        },
+        {
+          "name": "Materials, Manufacturing and Industrial Engineering",
+          "concepts": [
+            {
+              "name": "treatment"
+            },
+            {
+              "name": "stress-strain diagrams for engineering materials"
+            },
+            {
+              "name": "criteria"
+            },
+            {
+              "name": "fundamentals of hot and cold working processes"
+            },
+            {
+              "name": "load estimation for bulk (forging"
+            },
+            {
+              "name": "rolling"
+            },
+            {
+              "name": "extrusion"
+            },
+            {
+              "name": "drawing) and sheet (shearing"
+            },
+            {
+              "name": "deep drawing"
+            },
+            {
+              "name": "bending) metal forming"
+            },
+            {
+              "name": "processes"
+            },
+            {
+              "name": "principles of powder metallurgy. Principles of welding"
+            },
+            {
+              "name": "brazing"
+            },
+            {
+              "name": "soldering and"
+            },
+            {
+              "name": "and multi-point cutting tools"
+            },
+            {
+              "name": "tool geometry and materials"
+            },
+            {
+              "name": "tool life and wear"
+            },
+            {
+              "name": "economics of"
+            },
+            {
+              "name": "machining"
+            },
+            {
+              "name": "principles of non-traditional machining processes"
+            },
+            {
+              "name": "principles of work holding"
+            },
+            {
+              "name": "jigs"
+            },
+            {
+              "name": "scheduling"
+            },
+            {
+              "name": "materials requirement planning"
+            },
+            {
+              "name": "lean manufacturing"
+            },
+            {
+              "name": "network flow models"
+            },
+            {
+              "name": "simple queuing models"
+            },
+            {
+              "name": "PERT and CPM"
+            }
+          ]
+        },
+        {
+          "name": "Casting, Forming and Joining Processes",
+          "concepts": [
+            {
+              "name": "Different types of castings"
+            },
+            {
+              "name": "design of patterns"
+            },
+            {
+              "name": "moulds"
+            }
+          ]
+        },
+        {
+          "name": "Machining and Machine Tool Operations",
+          "concepts": [
+            {
+              "name": "Mechanics of machining"
+            },
+            {
+              "name": "basic machine tools"
+            },
+            {
+              "name": "single"
+            }
+          ]
+        },
+        {
+          "name": "Metrology and Inspection",
+          "concepts": [
+            {
+              "name": "Limits"
+            },
+            {
+              "name": "fits and tolerances"
+            },
+            {
+              "name": "linear and angular measurements"
+            }
+          ]
+        },
+        {
+          "name": "Computer Integrated Manufacturing",
+          "concepts": [
+            {
+              "name": "Basic concepts of CAD/CAM and their integration tools"
+            }
+          ]
+        },
+        {
+          "name": "Production Planning and Control",
+          "concepts": [
+            {
+              "name": "Forecasting models"
+            },
+            {
+              "name": "aggregate production planning"
+            }
+          ]
+        },
+        {
+          "name": "Inventory Control",
+          "concepts": [
+            {
+              "name": "Deterministic models"
+            },
+            {
+              "name": "safety stock inventory control systems"
+            }
+          ]
+        },
+        {
+          "name": "Operations Research",
+          "concepts": [
+            {
+              "name": "Linear programming"
+            },
+            {
+              "name": "simplex method"
+            },
+            {
+              "name": "transportation"
+            },
+            {
+              "name": "assignment"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,778 @@
+{
+  "subject": "CE 2026",
+  "topics": [
+    {
+      "name": "Engineering Mathematics",
+      "subtopics": [
+        {
+          "name": "Linear Algebra",
+          "concepts": [
+            {
+              "name": "Matrix algebra"
+            },
+            {
+              "name": "Systems of linear equations"
+            },
+            {
+              "name": "eigenvalues and eigenvectors"
+            }
+          ]
+        },
+        {
+          "name": "Calculus",
+          "concepts": [
+            {
+              "name": "Functions of single variable"
+            },
+            {
+              "name": "Limit"
+            },
+            {
+              "name": "continuity and differentiability"
+            },
+            {
+              "name": "Mean value"
+            }
+          ]
+        },
+        {
+          "name": "Engineering Mathematics",
+          "concepts": [
+            {
+              "name": "theorems"
+            },
+            {
+              "name": "local maxima and minima"
+            },
+            {
+              "name": "Taylor series"
+            },
+            {
+              "name": "Evaluation of definite and indefinite"
+            },
+            {
+              "name": "integrals"
+            },
+            {
+              "name": "application of definite integral to obtain area and volume"
+            },
+            {
+              "name": "Partial derivatives"
+            },
+            {
+              "name": "Total"
+            },
+            {
+              "name": "derivative"
+            },
+            {
+              "name": "Gradient"
+            },
+            {
+              "name": "Divergence and Curl"
+            },
+            {
+              "name": "Vector identities"
+            },
+            {
+              "name": "Directional derivatives"
+            },
+            {
+              "name": "Line"
+            },
+            {
+              "name": "statistics – Mean"
+            },
+            {
+              "name": "median"
+            },
+            {
+              "name": "mode and standard deviation"
+            },
+            {
+              "name": "Random Variables – Discrete and"
+            },
+            {
+              "name": "Continuous"
+            },
+            {
+              "name": "Poisson and Normal Distribution"
+            },
+            {
+              "name": "Linear regression"
+            }
+          ]
+        },
+        {
+          "name": "Ordinary Differential Equation (ODE)",
+          "concepts": [
+            {
+              "name": "First order (linear and non-linear) equations"
+            },
+            {
+              "name": "higher"
+            }
+          ]
+        },
+        {
+          "name": "Partial Differential Equation (PDE)",
+          "concepts": [
+            {
+              "name": "Fourier series"
+            },
+            {
+              "name": "Separation of variables"
+            },
+            {
+              "name": "solutions of one-"
+            }
+          ]
+        },
+        {
+          "name": "Probability and Statistics",
+          "concepts": [
+            {
+              "name": "Sampling theorems"
+            },
+            {
+              "name": "Conditional probability"
+            },
+            {
+              "name": "Descriptive"
+            }
+          ]
+        },
+        {
+          "name": "Numerical Methods",
+          "concepts": [
+            {
+              "name": "Error analysis. Numerical solutions of linear and non-linear algebraic"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Structural Engineering",
+      "subtopics": [
+        {
+          "name": "Engineering Mechanics",
+          "concepts": [
+            {
+              "name": "System of forces"
+            },
+            {
+              "name": "free-body diagrams"
+            },
+            {
+              "name": "equilibrium equations"
+            },
+            {
+              "name": "Internal"
+            }
+          ]
+        },
+        {
+          "name": "Solid Mechanics",
+          "concepts": [
+            {
+              "name": "Bending moment and shear force in statically determinate beams"
+            },
+            {
+              "name": "Simple"
+            }
+          ]
+        },
+        {
+          "name": "Structural Engineering",
+          "concepts": [
+            {
+              "name": "stress and strain relationships"
+            },
+            {
+              "name": "Simple bending theory"
+            },
+            {
+              "name": "flexural and shear stresses"
+            },
+            {
+              "name": "shear"
+            },
+            {
+              "name": "centre"
+            },
+            {
+              "name": "Uniform torsion"
+            },
+            {
+              "name": "Transformation of stress"
+            },
+            {
+              "name": "buckling of column"
+            },
+            {
+              "name": "combined and direct"
+            },
+            {
+              "name": "methods"
+            },
+            {
+              "name": "Method of superposition"
+            },
+            {
+              "name": "Analysis of trusses"
+            },
+            {
+              "name": "arches"
+            },
+            {
+              "name": "beams"
+            },
+            {
+              "name": "cables and frames"
+            },
+            {
+              "name": "Composition"
+            },
+            {
+              "name": "material properties and behaviour"
+            },
+            {
+              "name": "Concrete - Constituents"
+            },
+            {
+              "name": "mix design"
+            },
+            {
+              "name": "compression members"
+            },
+            {
+              "name": "beams and beam- columns"
+            },
+            {
+              "name": "column bases"
+            },
+            {
+              "name": "Connections - simple and"
+            },
+            {
+              "name": "eccentric"
+            },
+            {
+              "name": "beam-column connections"
+            },
+            {
+              "name": "plate girders and trusses"
+            },
+            {
+              "name": "Concept of plastic"
+            }
+          ]
+        },
+        {
+          "name": "Structural Analysis",
+          "concepts": [
+            {
+              "name": "Statically determinate and indeterminate structures by force/ energy"
+            }
+          ]
+        },
+        {
+          "name": "Displacement methods",
+          "concepts": [
+            {
+              "name": "Slope deflection and moment distribution methods"
+            },
+            {
+              "name": "Influence"
+            }
+          ]
+        },
+        {
+          "name": "Construction Materials and Management",
+          "concepts": [
+            {
+              "name": "Construction Materials: Structural Steel –"
+            }
+          ]
+        },
+        {
+          "name": "short-term and long-term properties. Construction Management",
+          "concepts": [
+            {
+              "name": "Types of construction"
+            }
+          ]
+        },
+        {
+          "name": "Concrete Structures",
+          "concepts": [
+            {
+              "name": "Working stress and Limit state design concepts"
+            },
+            {
+              "name": "Design of beams"
+            },
+            {
+              "name": "slabs"
+            }
+          ]
+        },
+        {
+          "name": "Steel Structures",
+          "concepts": [
+            {
+              "name": "Working stress and Limit state design concepts"
+            },
+            {
+              "name": "Design of tension and"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Geotechnical Engineering",
+      "subtopics": [
+        {
+          "name": "Soil Mechanics",
+          "concepts": [
+            {
+              "name": "Three-phase system and phase relationships"
+            },
+            {
+              "name": "index properties"
+            },
+            {
+              "name": "Unified and"
+            }
+          ]
+        },
+        {
+          "name": "Geotechnical Engineering",
+          "concepts": [
+            {
+              "name": "Indian standard soil classification system"
+            },
+            {
+              "name": "Permeability - one dimensional flow"
+            },
+            {
+              "name": "Seepage"
+            },
+            {
+              "name": "through soils – two - dimensional flow"
+            },
+            {
+              "name": "flow nets"
+            },
+            {
+              "name": "uplift pressure"
+            },
+            {
+              "name": "piping"
+            },
+            {
+              "name": "capillarity"
+            },
+            {
+              "name": "seepage"
+            },
+            {
+              "name": "dimensional consolidation"
+            },
+            {
+              "name": "time rate of consolidation"
+            },
+            {
+              "name": "Shear Strength"
+            },
+            {
+              "name": "Mohr’s circle"
+            },
+            {
+              "name": "effective and total shear strength parameters"
+            },
+            {
+              "name": "Stress-Strain characteristics of clays and"
+            },
+            {
+              "name": "load test"
+            },
+            {
+              "name": "standard penetration and cone penetration tests"
+            },
+            {
+              "name": "Earth pressure theories -"
+            },
+            {
+              "name": "Rankine and Coulomb"
+            },
+            {
+              "name": "Stability of slopes – Finite and infinite slopes"
+            },
+            {
+              "name": "Bishop’s method"
+            },
+            {
+              "name": "Stress distribution in soils – Boussinesq’s theory"
+            },
+            {
+              "name": "Pressure bulbs"
+            },
+            {
+              "name": "Shallow foundations –"
+            },
+            {
+              "name": "Terzaghi’s and Meyerhoff’s bearing capacity theories"
+            },
+            {
+              "name": "effect of water table"
+            },
+            {
+              "name": "Combined"
+            },
+            {
+              "name": "foundations – dynamic and static formulae"
+            },
+            {
+              "name": "Axial load capacity of piles in sands and clays"
+            },
+            {
+              "name": "pile load test"
+            },
+            {
+              "name": "pile under lateral loading"
+            },
+            {
+              "name": "pile group efficiency"
+            },
+            {
+              "name": "negative skin friction"
+            }
+          ]
+        },
+        {
+          "name": "Foundation Engineering",
+          "concepts": [
+            {
+              "name": "Sub-surface investigations - Drilling bore holes"
+            },
+            {
+              "name": "sampling"
+            },
+            {
+              "name": "plate"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Water Resources Engineering",
+      "subtopics": [
+        {
+          "name": "Fluid Mechanics",
+          "concepts": [
+            {
+              "name": "Properties of fluids"
+            },
+            {
+              "name": "fluid statics"
+            },
+            {
+              "name": "Continuity"
+            },
+            {
+              "name": "momentum and energy"
+            }
+          ]
+        },
+        {
+          "name": "Water Resources Engineering",
+          "concepts": [
+            {
+              "name": "equations and their applications"
+            },
+            {
+              "name": "Potential flow"
+            },
+            {
+              "name": "Laminar and turbulent flow"
+            },
+            {
+              "name": "Flow in pipes"
+            },
+            {
+              "name": "relationships"
+            },
+            {
+              "name": "specific energy"
+            },
+            {
+              "name": "critical flow"
+            },
+            {
+              "name": "hydraulic jump"
+            },
+            {
+              "name": "uniform flow"
+            },
+            {
+              "name": "gradually varied"
+            },
+            {
+              "name": "infiltration"
+            },
+            {
+              "name": "unit hydrographs"
+            },
+            {
+              "name": "hydrograph analysis"
+            },
+            {
+              "name": "reservoir capacity"
+            },
+            {
+              "name": "flood estimation and"
+            },
+            {
+              "name": "routing"
+            },
+            {
+              "name": "surface run-off models"
+            },
+            {
+              "name": "ground water hydrology - steady state well hydraulics and"
+            },
+            {
+              "name": "evapo-transpiration"
+            },
+            {
+              "name": "Gravity Dams and Spillways"
+            },
+            {
+              "name": "Lined and unlined canals"
+            },
+            {
+              "name": "Design of weirs"
+            }
+          ]
+        },
+        {
+          "name": "Hydraulics",
+          "concepts": [
+            {
+              "name": "Forces on immersed bodies"
+            },
+            {
+              "name": "Flow measurement in channels and pipes"
+            }
+          ]
+        },
+        {
+          "name": "Hydrology",
+          "concepts": [
+            {
+              "name": "Hydrologic cycle"
+            },
+            {
+              "name": "precipitation"
+            },
+            {
+              "name": "evaporation"
+            },
+            {
+              "name": "evapo-transpiration"
+            },
+            {
+              "name": "watershed"
+            }
+          ]
+        },
+        {
+          "name": "Irrigation",
+          "concepts": [
+            {
+              "name": "Types of irrigation systems and methods"
+            },
+            {
+              "name": "Crop water requirements - Duty"
+            },
+            {
+              "name": "delta"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Environmental Engineering",
+      "subtopics": [
+        {
+          "name": "Water and Waste Water Quality and Treatment",
+          "concepts": [
+            {
+              "name": "Basics of water quality standards – Physical"
+            }
+          ]
+        },
+        {
+          "name": "Environmental Engineering",
+          "concepts": [
+            {
+              "name": "Sewerage system design"
+            },
+            {
+              "name": "quantity of domestic wastewater"
+            },
+            {
+              "name": "primary and secondary"
+            },
+            {
+              "name": "standards"
+            },
+            {
+              "name": "Air quality Index and limits"
+            },
+            {
+              "name": "wastes"
+            },
+            {
+              "name": "engineered systems for solid waste management (reuse/ recycle"
+            },
+            {
+              "name": "energy recovery"
+            }
+          ]
+        },
+        {
+          "name": "Air Pollution",
+          "concepts": [
+            {
+              "name": "Types of pollutants"
+            },
+            {
+              "name": "their sources and impacts"
+            },
+            {
+              "name": "air pollution control"
+            },
+            {
+              "name": "air quality"
+            }
+          ]
+        },
+        {
+          "name": "Municipal Solid Wastes",
+          "concepts": [
+            {
+              "name": "Characteristics"
+            },
+            {
+              "name": "generation"
+            },
+            {
+              "name": "collection and transportation of solid"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Transportation Engineering",
+      "subtopics": [
+        {
+          "name": "Transportation Infrastructure",
+          "concepts": [
+            {
+              "name": "Geometric design of highways - cross-sectional elements"
+            }
+          ]
+        },
+        {
+          "name": "Transportation Engineering",
+          "concepts": [
+            {
+              "name": "sight distances"
+            },
+            {
+              "name": "horizontal and vertical alignments"
+            },
+            {
+              "name": "Concept of airport runway length"
+            },
+            {
+              "name": "calculations and corrections"
+            },
+            {
+              "name": "taxiway and exit taxiway"
+            },
+            {
+              "name": "statistical analysis of traffic data"
+            },
+            {
+              "name": "Microscopic and macroscopic parameters of traffic flow"
+            }
+          ]
+        },
+        {
+          "name": "Highway Pavements",
+          "concepts": [
+            {
+              "name": "Highway materials - desirable properties and tests"
+            },
+            {
+              "name": "Desirable"
+            }
+          ]
+        },
+        {
+          "name": "Traffic Engineering",
+          "concepts": [
+            {
+              "name": "Traffic studies on flow and speed"
+            },
+            {
+              "name": "peak hour factor"
+            },
+            {
+              "name": "accident study"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Geomatics Engineering",
+      "subtopics": [
+        {
+          "name": "Geomatics Engineering",
+          "concepts": [
+            {
+              "name": "Principles of surveying"
+            },
+            {
+              "name": "Errors and their adjustment"
+            },
+            {
+              "name": "Maps - scale"
+            },
+            {
+              "name": "coordinate system"
+            },
+            {
+              "name": "Photogrammetry and Remote Sensing - Scale"
+            },
+            {
+              "name": "flying height"
+            },
+            {
+              "name": "Basics of remote sensing and"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -15,6 +15,7 @@ from app.graph.queries import (
 class PaperState(TypedDict):
     total_questions: int
     cutoff_year: int
+    subject: str
 
     blueprint: dict
     questions: List[dict]
@@ -30,14 +31,17 @@ class PaperState(TypedDict):
 def retrieve_concepts(state: PaperState):
     return {
         "high_frequency": get_high_frequency_concepts(
-            limit=int(state["total_questions"] * 0.5)
+            limit=int(state["total_questions"] * 0.5),
+            subject=state.get("subject")
         ),
         "recency_gap": get_recency_gap_concepts(
             cutoff_year=state["cutoff_year"],
-            limit=int(state["total_questions"] * 0.3)
+            limit=int(state["total_questions"] * 0.3),
+            subject=state.get("subject")
         ),
         "never_asked": get_never_asked_concepts(
-            limit=int(state["total_questions"] * 0.2)
+            limit=int(state["total_questions"] * 0.2),
+            subject=state.get("subject")
         )
     }
 
@@ -48,7 +52,8 @@ def retrieve_concepts(state: PaperState):
 def build_blueprint_node(state: PaperState):
     blueprint = build_paper_blueprint(
         total_questions=state["total_questions"],
-        cutoff_year=state["cutoff_year"]
+        cutoff_year=state["cutoff_year"],
+        subject=state.get("subject")
     )
     return {"blueprint": blueprint}
 
@@ -63,10 +68,13 @@ from app.llm.nodes.generate import generate_question
 def generate_questions_node(state: PaperState):
     questions = []
 
+    subject = state.get("subject") or getattr(state.get("blueprint"), "subject", "")
+
     for item in state["blueprint"].questions:
         q = generate_question(
             concept=item.concept,
-            difficulty=item.difficulty
+            difficulty=item.difficulty,
+            subject=subject or ""
         )
         questions.append(q)
 
@@ -115,10 +123,13 @@ def regenerate_failed_questions(state: PaperState):
 
     regenerated = []
 
+    subject = state.get("subject") or getattr(state.get("blueprint"), "subject", "")
+
     for q in state["failed_questions"]:
         new_q = generate_question(
             concept=q["concept"],
-            difficulty=q["difficulty"]
+            difficulty=q["difficulty"],
+            subject=subject or ""
         )
         regenerated.append(new_q)
 
@@ -180,7 +191,8 @@ if __name__ == "__main__":
     result = graph.invoke({
         "total_questions": 60,
         "cutoff_year": 2019,
-        "retry_count": 0
+        "retry_count": 0,
+        "subject": "Electrical Engineering"
     })
 
     final_qs = result.get("final_questions", result.get("validated_questions", []))

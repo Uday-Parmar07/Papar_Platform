@@ -4,6 +4,7 @@ from fastapi.responses import StreamingResponse
 from app.schemas.exam import (
 	GenerateExamRequest,
 	GenerateExamResponse,
+	SubjectListResponse,
 	VerifyQuestionsRequest,
 	VerifyQuestionsResponse,
 	PdfRequest,
@@ -11,6 +12,7 @@ from app.schemas.exam import (
 from app.services.exam_service import generate_exam
 from app.services.pdf_service import render_questions_pdf
 from app.llm.nodes.validate import validate_question
+from app.graph.queries import list_subject_names
 
 
 router = APIRouter()
@@ -19,9 +21,19 @@ router = APIRouter()
 @router.post("/generate", response_model=GenerateExamResponse)
 def generate_exam_endpoint(payload: GenerateExamRequest) -> GenerateExamResponse:
 	try:
-		return generate_exam(total_questions=payload.total_questions, cutoff_year=payload.cutoff_year)
+		return generate_exam(
+			total_questions=payload.total_questions,
+			cutoff_year=payload.cutoff_year,
+			subject=payload.subject,
+		)
 	except ValueError as exc:
 		raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.get("/subjects", response_model=SubjectListResponse)
+def list_subjects() -> SubjectListResponse:
+	subjects = list_subject_names()
+	return SubjectListResponse(subjects=subjects)
 
 
 @router.post("/verify", response_model=VerifyQuestionsResponse)

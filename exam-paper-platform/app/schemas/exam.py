@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field, field_validator
 
 
 class GenerateExamRequest(BaseModel):
+	subject: str = Field(min_length=1, description="Subject name to generate questions for")
 	total_questions: int = Field(ge=1, le=120, description="Number of questions to generate")
 	cutoff_year: int = Field(ge=2000, description="Do not include questions asked after this year")
 
@@ -18,6 +19,7 @@ class GenerateExamResponse(BaseModel):
 	total_questions: int
 	distribution: Dict[str, int]
 	questions: List[Question]
+	subject: str
 
 
 class VerifyQuestionsRequest(BaseModel):
@@ -52,3 +54,7 @@ class PdfRequest(BaseModel):
 		if not value:
 			raise ValueError("At least one question is required")
 		return value
+
+
+class SubjectListResponse(BaseModel):
+	subjects: List[str]

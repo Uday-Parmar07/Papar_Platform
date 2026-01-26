@@ -20,43 +20,136 @@ except ValueError as exc:
 # GRAPH RAG RETRIEVAL QUERIES
 # -----------------------------
 
-def get_high_frequency_concepts(limit=10):
+def _concept_fallback(subject: str | None, limit: int):
+    if subject:
+        query = """
+        MATCH (s:Subject {name: $subject})-[:HAS_TOPIC]->(:Topic)-[:HAS_SUBTOPIC]->(:SubTopic)-[:HAS_CONCEPT]->(c:Concept)
+        WITH DISTINCT c
+        RETURN c.name AS name
+        ORDER BY rand()
+        LIMIT $limit
+        """
+        params = {"subject": subject, "limit": limit}
+    else:
+        query = """
+        MATCH (c:Concept)
+        RETURN c.name AS name
+        ORDER BY rand()
+        LIMIT $limit
+        """
+        params = {"limit": limit}
+
+    fallback, _ = db.cypher_query(query, params)
+    return [row[0] for row in fallback]
+
+
+def get_high_frequency_concepts(limit=10, subject: str | None = None):
+    if subject:
+        query = """
+        MATCH (s:Subject {name: $subject})-[:HAS_TOPIC]->(:Topic)-[:HAS_SUBTOPIC]->(:SubTopic)-[:HAS_CONCEPT]->(c:Concept)
+        WITH DISTINCT c
+        OPTIONAL MATCH (q:Question)-[:APPEARS_IN]->(c)
+        WITH c, count(q) AS score
+        WHERE score > 0
+        RETURN c.name AS name, score
+        ORDER BY score DESC
+        LIMIT $limit
+        """
+        params = {"subject": subject, "limit": limit}
+    else:
+        query = """
+        MATCH (q:Question)-[:APPEARS_IN]->(c:Concept)
+        RETURN c.name AS name, count(q) AS score
+        ORDER BY score DESC
+        LIMIT $limit
+        """
+        params = {"limit": limit}
+
+    results, _ = db.cypher_query(query, params)
+    concepts = [{"concept": row[0], "score": row[1]} for row in results]
+
+    if concepts:
+        return concepts
+
+    fallback = _concept_fallback(subject, limit)
+    return [{"concept": name, "score": 0} for name in fallback]
+
+
+def get_never_asked_concepts(limit=10, subject: str | None = None):
+    if subject:
+        query = """
+        MATCH (s:Subject {name: $subject})-[:HAS_TOPIC]->(:Topic)-[:HAS_SUBTOPIC]->(:SubTopic)-[:HAS_CONCEPT]->(c:Concept)
+        WITH DISTINCT c
+        OPTIONAL MATCH (q:Question)-[:APPEARS_IN]->(c)
+        WITH c, count(q) AS appearances
+        WHERE appearances = 0
+        RETURN c.name AS name
+        ORDER BY rand()
+        LIMIT $limit
+        """
+        params = {"subject": subject, "limit": limit}
+    else:
+        query = """
+        MATCH (c:Concept)
+        WHERE NOT EXISTS { MATCH (:Question)-[:APPEARS_IN]->(c) }
+        RETURN c.name AS name
+        ORDER BY rand()
+        LIMIT $limit
+        """
+        params = {"limit": limit}
+
+    results, _ = db.cypher_query(query, params)
+    concepts = [{"concept": row[0]} for row in results]
+
+    if concepts:
+        return concepts
+
+    fallback = _concept_fallback(subject, limit)
+    return [{"concept": name} for name in fallback]
+
+
+def get_recency_gap_concepts(cutoff_year, limit=10, subject: str | None = None):
+    if subject:
+        query = """
+        MATCH (s:Subject {name: $subject})-[:HAS_TOPIC]->(:Topic)-[:HAS_SUBTOPIC]->(:SubTopic)-[:HAS_CONCEPT]->(c:Concept)
+        WITH DISTINCT c
+        MATCH (q:Question)-[:APPEARS_IN]->(c)
+        WITH c, max(q.year) AS last_year
+        WHERE last_year <= $cutoff
+        RETURN c.name AS name, last_year
+        ORDER BY last_year ASC
+        LIMIT $limit
+        """
+        params = {"subject": subject, "cutoff": cutoff_year, "limit": limit}
+    else:
+        query = """
+        MATCH (q:Question)-[:APPEARS_IN]->(c:Concept)
+        WITH c, max(q.year) AS last_year
+        WHERE last_year <= $cutoff
+        RETURN c.name AS name, last_year
+        ORDER BY last_year ASC
+        LIMIT $limit
+        """
+        params = {"cutoff": cutoff_year, "limit": limit}
+
+    results, _ = db.cypher_query(query, params)
+    concepts = [{"concept": row[0], "last_asked": row[1]} for row in results]
+
+    if concepts:
+        return concepts
+
+    fallback = _concept_fallback(subject, limit)
+    return [{"concept": name, "last_asked": None} for name in fallback]
+
+
+def list_subject_names() -> list[str]:
     query = """
-    MATCH (c:Concept)
-    WHERE c.frequency > 0
-    RETURN c.name AS name, c.frequency AS score
-    ORDER BY score DESC
-    LIMIT $limit
+    MATCH (s:Subject)
+    RETURN s.name AS name
+    ORDER BY name
     """
-    results, _ = db.cypher_query(query, {"limit": limit})
-    return [{"concept": r[0], "score": r[1]} for r in results]
-
-
-def get_never_asked_concepts(limit=10):
-    query = """
-    MATCH (c:Concept)
-    WHERE c.frequency = 0
-    RETURN c.name AS name
-    LIMIT $limit
-    """
-    results, _ = db.cypher_query(query, {"limit": limit})
-    return [{"concept": r[0]} for r in results]
-
-
-def get_recency_gap_concepts(cutoff_year, limit=10):
-    query = """
-    MATCH (c:Concept)-[:APPEARS_IN]->(q:Question)
-    WITH c, max(q.year) AS last_year
-    WHERE last_year <= $cutoff
-    RETURN c.name AS name, last_year
-    ORDER BY last_year ASC
-    LIMIT $limit
-    """
-    results, _ = db.cypher_query(
-        query,
-        {"cutoff": cutoff_year, "limit": limit}
-    )
-    return [{"concept": r[0], "last_asked": r[1]} for r in results]
+    results, _ = db.cypher_query(query, {})
+    return [row[0] for row in results]
 
 
 def get_prerequisite_heavy_concepts(limit=10):

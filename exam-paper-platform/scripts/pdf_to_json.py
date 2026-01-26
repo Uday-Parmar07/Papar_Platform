@@ -1,25 +1,28 @@
+import argparse
 import json
 import re
 from pathlib import Path
+from typing import Iterable, List
+
 import fitz
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 
-PDF_PATH = BASE_DIR / "raw_syllabus" / "EE_2026_Syllabus.pdf"
-OUTPUT_JSON = BASE_DIR / "json_syllabus" / "EE_2026_Syllabus.json"
+DEFAULT_INPUT_DIR = BASE_DIR / "raw_syllabus"
+DEFAULT_OUTPUT_DIR = BASE_DIR / "json_syllabus"
 
 SECTION_RE = re.compile(r"Section\s+\d+:\s+(.*)")
 
-def extract_text(pdf_path):
+def extract_text(pdf_path: Path) -> str:
     doc = fitz.open(pdf_path)
     text = ""
     for page in doc:
         text += page.get_text() + "\n"
     return text
 
-def parse_syllabus(text):
+def parse_syllabus(text: str, subject: str) -> dict:
     syllabus = {
-        "subject": "Electrical Engineering",
+        "subject": subject,
         "topics": []
     }
 
@@ -82,21 +85,110 @@ def parse_syllabus(text):
 
     return syllabus
 
-if __name__ == "__main__":
-    print("🚀 Starting syllabus PDF → JSON conversion")
 
-    if not PDF_PATH.exists():
-        raise FileNotFoundError(f"PDF not found: {PDF_PATH}")
+def collect_pdfs(targets: Iterable[Path]) -> List[Path]:
+    pdfs: List[Path] = []
 
-    text = extract_text(PDF_PATH)
-    print(f"📄 Extracted {len(text)} characters from PDF")
+    for target in targets:
+        if target.is_dir():
+            pdfs.extend(sorted(target.glob("*.pdf")))
+        elif target.suffix.lower() == ".pdf" and target.exists():
+            pdfs.append(target)
+        else:
+            raise FileNotFoundError(f"No PDF found at {target}")
 
-    syllabus = parse_syllabus(text)
-    print(f"📊 Topics parsed: {len(syllabus['topics'])}")
+    unique_pdfs = []
+    seen = set()
+    for pdf in pdfs:
+        resolved = pdf.resolve()
+        if resolved not in seen:
+            seen.add(resolved)
+            unique_pdfs.append(resolved)
 
-    OUTPUT_JSON.parent.mkdir(parents=True, exist_ok=True)
+    if not unique_pdfs:
+        raise FileNotFoundError("No PDF files discovered from provided inputs")
 
-    with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
+    return unique_pdfs
+
+
+def normalize_subject_name(stem: str) -> str:
+    name = stem.replace("_", " ").strip()
+    if not name:
+        return "Syllabus"
+
+    suffixes = [" syllabus", "_syllabus"]
+    lower_name = name.lower()
+    for suffix in suffixes:
+        if lower_name.endswith(suffix):
+            name = name[: -len(suffix)]
+            break
+
+    cleaned_parts = []
+    for part in re.split(r"\s+", name.strip()):
+        if not part:
+            continue
+        if part.isupper() or part.isdigit():
+            cleaned_parts.append(part)
+        else:
+            cleaned_parts.append(part.capitalize())
+
+    return " ".join(cleaned_parts) if cleaned_parts else "Syllabus"
+
+
+def convert_pdf(pdf_path: Path, output_dir: Path, subject_override: str | None = None) -> Path:
+    print(f"🚀 Converting {pdf_path.name}")
+    text = extract_text(pdf_path)
+    print(f"📄 Extracted {len(text)} characters from {pdf_path.name}")
+
+    subject = subject_override or normalize_subject_name(pdf_path.stem)
+    syllabus = parse_syllabus(text, subject)
+    print(f"📊 Parsed {len(syllabus['topics'])} topics from {pdf_path.name}")
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / f"{pdf_path.stem}.json"
+
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(syllabus, f, indent=2, ensure_ascii=False)
 
-    print(f"✅ JSON written to: {OUTPUT_JSON}")
+    print(f"✅ JSON written to: {output_path}")
+    return output_path
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Convert syllabus PDFs into JSON structures"
+    )
+    parser.add_argument(
+        "inputs",
+        nargs="*",
+        type=Path,
+        default=[DEFAULT_INPUT_DIR],
+        help="PDF files or directories containing PDFs. Defaults to raw_syllabus."
+    )
+    parser.add_argument(
+        "-o",
+        "--output-dir",
+        type=Path,
+        default=DEFAULT_OUTPUT_DIR,
+        help="Directory where JSON files will be written. Defaults to json_syllabus."
+    )
+    parser.add_argument(
+        "-s",
+        "--subject",
+        type=str,
+        help="Override subject name used in generated JSON."
+    )
+    return parser
+
+if __name__ == "__main__":
+    args = build_parser().parse_args()
+
+    try:
+        pdfs = collect_pdfs(args.inputs)
+    except FileNotFoundError as exc:
+        raise SystemExit(str(exc))
+
+    for pdf in pdfs:
+        convert_pdf(pdf, args.output_dir, args.subject)
+
+    print("🎉 Conversion complete for all PDFs")

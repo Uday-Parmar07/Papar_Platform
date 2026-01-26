@@ -1,0 +1,454 @@
+{
+  "subject": "CS 2026",
+  "topics": [
+    {
+      "name": "Engineering Mathematics",
+      "subtopics": [
+        {
+          "name": "Discrete Mathematics",
+          "concepts": [
+            {
+              "name": "Propositional and first order logic. Sets"
+            },
+            {
+              "name": "relations"
+            },
+            {
+              "name": "functions"
+            },
+            {
+              "name": "partial orders and"
+            }
+          ]
+        },
+        {
+          "name": "lattices. Monoids, Groups. Graphs",
+          "concepts": [
+            {
+              "name": "connectivity"
+            },
+            {
+              "name": "matching"
+            },
+            {
+              "name": "colouring. Combinatorics: counting"
+            }
+          ]
+        },
+        {
+          "name": "Engineering Mathematics",
+          "concepts": [
+            {
+              "name": "recurrence relations"
+            },
+            {
+              "name": "generating functions"
+            },
+            {
+              "name": "distributions. Mean"
+            },
+            {
+              "name": "median"
+            },
+            {
+              "name": "mode and standard deviation. Conditional probability and Bayes theorem"
+            }
+          ]
+        },
+        {
+          "name": "Linear Algebra",
+          "concepts": [
+            {
+              "name": "Matrices"
+            },
+            {
+              "name": "determinants"
+            },
+            {
+              "name": "system of linear equations"
+            },
+            {
+              "name": "eigenvalues and eigenvectors"
+            },
+            {
+              "name": "LU"
+            }
+          ]
+        },
+        {
+          "name": "Calculus",
+          "concepts": [
+            {
+              "name": "Limits"
+            },
+            {
+              "name": "continuity and differentiability"
+            },
+            {
+              "name": "Maxima and minima"
+            },
+            {
+              "name": "Mean value theorem"
+            }
+          ]
+        },
+        {
+          "name": "Probability and Statistics",
+          "concepts": [
+            {
+              "name": "Random variables"
+            },
+            {
+              "name": "Uniform"
+            },
+            {
+              "name": "normal"
+            },
+            {
+              "name": "exponential"
+            },
+            {
+              "name": "Poisson and binomial"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Digital Logic",
+      "subtopics": []
+    },
+    {
+      "name": "Computer Organization and Architecture",
+      "subtopics": [
+        {
+          "name": "Computer Organization and Architecture",
+          "concepts": [
+            {
+              "name": "Machine instructions and addressing modes. ALU"
+            },
+            {
+              "name": "data‐path and control unit. Instruction pipelining"
+            }
+          ]
+        },
+        {
+          "name": "pipeline hazards. Memory hierarchy",
+          "concepts": [
+            {
+              "name": "cache"
+            },
+            {
+              "name": "main memory and secondary storage"
+            },
+            {
+              "name": "I/O interface"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Programming and Data Structures",
+      "subtopics": [
+        {
+          "name": "Programming and Data Structures",
+          "concepts": [
+            {
+              "name": "Programming in C. Recursion. Arrays"
+            },
+            {
+              "name": "stacks"
+            },
+            {
+              "name": "queues"
+            },
+            {
+              "name": "linked lists"
+            },
+            {
+              "name": "trees"
+            },
+            {
+              "name": "binary search trees"
+            },
+            {
+              "name": "binary"
+            },
+            {
+              "name": "heaps"
+            },
+            {
+              "name": "graphs"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Algorithms",
+      "subtopics": [
+        {
+          "name": "Algorithms",
+          "concepts": [
+            {
+              "name": "Searching"
+            },
+            {
+              "name": "sorting"
+            },
+            {
+              "name": "hashing. Asymptotic worst case time and space complexity. Algorithm design"
+            },
+            {
+              "name": "spanning trees"
+            },
+            {
+              "name": "shortest paths"
+            }
+          ]
+        },
+        {
+          "name": "techniques",
+          "concepts": [
+            {
+              "name": "greedy"
+            },
+            {
+              "name": "dynamic programming and divide‐and‐conquer. Graph traversals"
+            },
+            {
+              "name": "minimum"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Theory of Computation",
+      "subtopics": [
+        {
+          "name": "Theory of Computation",
+          "concepts": [
+            {
+              "name": "context-free languages"
+            },
+            {
+              "name": "pumping lemma. Turing machines and undecidability"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Compiler Design",
+      "subtopics": [
+        {
+          "name": "Compiler Design",
+          "concepts": [
+            {
+              "name": "Lexical analysis"
+            },
+            {
+              "name": "parsing"
+            },
+            {
+              "name": "syntax-directed translation. Runtime environments. Intermediate code"
+            }
+          ]
+        },
+        {
+          "name": "generation. Local optimization, Data flow analyses",
+          "concepts": [
+            {
+              "name": "constant propagation"
+            },
+            {
+              "name": "liveness analysis"
+            },
+            {
+              "name": "common"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Operating System",
+      "subtopics": [
+        {
+          "name": "Operating System",
+          "concepts": [
+            {
+              "name": "System calls"
+            },
+            {
+              "name": "processes"
+            },
+            {
+              "name": "threads"
+            },
+            {
+              "name": "inter‐process communication"
+            },
+            {
+              "name": "concurrency and synchronization"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Databases",
+      "subtopics": [
+        {
+          "name": "ER‐model. Relational model",
+          "concepts": [
+            {
+              "name": "relational algebra"
+            },
+            {
+              "name": "tuple calculus"
+            },
+            {
+              "name": "SQL. Integrity constraints"
+            },
+            {
+              "name": "normal"
+            }
+          ]
+        },
+        {
+          "name": "Databases",
+          "concepts": [
+            {
+              "name": "forms. File organization"
+            },
+            {
+              "name": "indexing (e.g"
+            },
+            {
+              "name": "B and B+ trees). Transactions and concurrency control"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Computer Networks",
+      "subtopics": [
+        {
+          "name": "Concept of layering",
+          "concepts": [
+            {
+              "name": "OSI and TCP/IP Protocol Stacks"
+            },
+            {
+              "name": "Basics of packet"
+            },
+            {
+              "name": "circuit and virtual circuit-"
+            }
+          ]
+        },
+        {
+          "name": "switching; Data link layer",
+          "concepts": [
+            {
+              "name": "framing"
+            },
+            {
+              "name": "error detection"
+            },
+            {
+              "name": "Medium Access Control"
+            },
+            {
+              "name": "Ethernet bridging"
+            }
+          ]
+        },
+        {
+          "name": "Routing protocols",
+          "concepts": [
+            {
+              "name": "shortest path"
+            },
+            {
+              "name": "flooding"
+            },
+            {
+              "name": "distance vector and link state routing"
+            },
+            {
+              "name": "Fragmentation and IP"
+            }
+          ]
+        },
+        {
+          "name": "Computer Networks",
+          "concepts": [
+            {
+              "name": "addressing"
+            },
+            {
+              "name": "IPv4"
+            },
+            {
+              "name": "CIDR notation"
+            },
+            {
+              "name": "Basics of IP support protocols (ARP"
+            },
+            {
+              "name": "DHCP"
+            },
+            {
+              "name": "ICMP)"
+            },
+            {
+              "name": "Network"
+            }
+          ]
+        },
+        {
+          "name": "Address Translation (NAT); Transport layer",
+          "concepts": [
+            {
+              "name": "flow control and congestion control"
+            },
+            {
+              "name": "UDP"
+            },
+            {
+              "name": "TCP"
+            },
+            {
+              "name": "sockets"
+            }
+          ]
+        },
+        {
+          "name": "Application layer protocols",
+          "concepts": [
+            {
+              "name": "DNS"
+            },
+            {
+              "name": "SMTP"
+            },
+            {
+              "name": "HTTP"
+            },
+            {
+              "name": "FTP"
+            },
+            {
+              "name": "Email"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

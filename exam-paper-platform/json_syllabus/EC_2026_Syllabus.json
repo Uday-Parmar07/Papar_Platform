@@ -1,0 +1,792 @@
+{
+  "subject": "EC 2026",
+  "topics": [
+    {
+      "name": "Engineering Mathematics",
+      "subtopics": [
+        {
+          "name": "Linear Algebra",
+          "concepts": [
+            {
+              "name": "Vector space"
+            },
+            {
+              "name": "basis"
+            },
+            {
+              "name": "linear dependence and independence"
+            },
+            {
+              "name": "matrix algebra"
+            }
+          ]
+        },
+        {
+          "name": "Engineering Mathematics",
+          "concepts": [
+            {
+              "name": "eigen values and eigen vectors"
+            },
+            {
+              "name": "rank"
+            },
+            {
+              "name": "solution of linear equations - existence and"
+            },
+            {
+              "name": "improper integrals"
+            },
+            {
+              "name": "partial derivatives"
+            },
+            {
+              "name": "maxima and minima"
+            },
+            {
+              "name": "multiple integrals"
+            },
+            {
+              "name": "line"
+            },
+            {
+              "name": "surface"
+            },
+            {
+              "name": "and volume integrals"
+            },
+            {
+              "name": "Taylor series"
+            },
+            {
+              "name": "differential equations"
+            },
+            {
+              "name": "Cauchy's and Euler's equations"
+            },
+            {
+              "name": "methods of solution using variation"
+            },
+            {
+              "name": "of parameters"
+            },
+            {
+              "name": "complementary function and particular integral"
+            },
+            {
+              "name": "partial differential"
+            },
+            {
+              "name": "equations"
+            },
+            {
+              "name": "variable separable method"
+            },
+            {
+              "name": "initial and boundary value problems"
+            },
+            {
+              "name": "curl"
+            },
+            {
+              "name": "Gauss's"
+            },
+            {
+              "name": "Green's and Stokes’ theorems"
+            },
+            {
+              "name": "formula"
+            },
+            {
+              "name": "sequences"
+            },
+            {
+              "name": "series"
+            },
+            {
+              "name": "convergence tests"
+            },
+            {
+              "name": "Taylor and Laurent series"
+            },
+            {
+              "name": "residue theorem"
+            },
+            {
+              "name": "probability"
+            },
+            {
+              "name": "distributions"
+            },
+            {
+              "name": "distribution"
+            },
+            {
+              "name": "distribution"
+            },
+            {
+              "name": "exponential distribution"
+            },
+            {
+              "name": "normal distribution"
+            },
+            {
+              "name": "joint and conditional probability"
+            }
+          ]
+        },
+        {
+          "name": "Calculus",
+          "concepts": [
+            {
+              "name": "Mean value theorems"
+            },
+            {
+              "name": "theorems of integral calculus"
+            },
+            {
+              "name": "evaluation of definite and"
+            }
+          ]
+        },
+        {
+          "name": "Differential Equations",
+          "concepts": [
+            {
+              "name": "First order equations (linear and nonlinear)"
+            },
+            {
+              "name": "higher order linear"
+            }
+          ]
+        },
+        {
+          "name": "Vector Analysis",
+          "concepts": [
+            {
+              "name": "Vectors in plane and space"
+            },
+            {
+              "name": "vector operations"
+            },
+            {
+              "name": "gradient"
+            },
+            {
+              "name": "divergence and"
+            }
+          ]
+        },
+        {
+          "name": "Complex Analysis",
+          "concepts": [
+            {
+              "name": "Analytic functions"
+            },
+            {
+              "name": "Cauchy’s integral theorem"
+            },
+            {
+              "name": "Cauchy’s integral"
+            }
+          ]
+        },
+        {
+          "name": "Probability and Statistics",
+          "concepts": [
+            {
+              "name": "Mean"
+            },
+            {
+              "name": "median"
+            },
+            {
+              "name": "mode"
+            },
+            {
+              "name": "standard deviation"
+            },
+            {
+              "name": "combinatorial"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Networks, Signals and Systems",
+      "subtopics": [
+        {
+          "name": "Circuit Analysis",
+          "concepts": [
+            {
+              "name": "Node and mesh analysis"
+            },
+            {
+              "name": "superposition"
+            },
+            {
+              "name": "Thevenin's theorem"
+            },
+            {
+              "name": "Norton’s"
+            }
+          ]
+        },
+        {
+          "name": "theorem, reciprocity. Sinusoidal steady state analysis",
+          "concepts": [
+            {
+              "name": "phasors"
+            },
+            {
+              "name": "complex power"
+            },
+            {
+              "name": "maximum"
+            }
+          ]
+        },
+        {
+          "name": "power transfer. Time and frequency domain analysis of linear circuits",
+          "concepts": [
+            {
+              "name": "RL"
+            },
+            {
+              "name": "RC and RLC"
+            }
+          ]
+        },
+        {
+          "name": "Networks, Signals and Systems",
+          "concepts": [
+            {
+              "name": "circuits"
+            },
+            {
+              "name": "solution of network equations using Laplace transform"
+            },
+            {
+              "name": "Linear 2-port network parameters"
+            },
+            {
+              "name": "wye-delta transformation"
+            },
+            {
+              "name": "convolution"
+            },
+            {
+              "name": "poles and zeroes"
+            },
+            {
+              "name": "frequency response"
+            },
+            {
+              "name": "group delay"
+            },
+            {
+              "name": "phase delay"
+            }
+          ]
+        },
+        {
+          "name": "Continuous-time Signals",
+          "concepts": [
+            {
+              "name": "Fourier series and Fourier transform"
+            },
+            {
+              "name": "sampling theorem"
+            }
+          ]
+        },
+        {
+          "name": "Discrete-time Signals",
+          "concepts": [
+            {
+              "name": "DTFT"
+            },
+            {
+              "name": "DFT"
+            },
+            {
+              "name": "z-transform"
+            },
+            {
+              "name": "discrete-time processing of continuous-time"
+            }
+          ]
+        },
+        {
+          "name": "signals. LTI systems",
+          "concepts": [
+            {
+              "name": "definition and properties"
+            },
+            {
+              "name": "causality"
+            },
+            {
+              "name": "stability"
+            },
+            {
+              "name": "impulse response"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electronic Devices",
+      "subtopics": [
+        {
+          "name": "Electronic Devices",
+          "concepts": [
+            {
+              "name": "Energy bands in intrinsic and extrinsic semiconductors"
+            },
+            {
+              "name": "equilibrium carrier concentration"
+            },
+            {
+              "name": "recombination of carriers"
+            },
+            {
+              "name": "Poisson and continuity equations"
+            },
+            {
+              "name": "P-N junction"
+            },
+            {
+              "name": "Zener diode"
+            },
+            {
+              "name": "BJT"
+            },
+            {
+              "name": "MOS capacitor"
+            },
+            {
+              "name": "MOSFET"
+            },
+            {
+              "name": "LED"
+            },
+            {
+              "name": "photo diode and solar cell"
+            }
+          ]
+        },
+        {
+          "name": "Carrier Transport",
+          "concepts": [
+            {
+              "name": "Diffusion current"
+            },
+            {
+              "name": "drift current"
+            },
+            {
+              "name": "mobility and resistivity"
+            },
+            {
+              "name": "generation and"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Analog Circuits",
+      "subtopics": [
+        {
+          "name": "Diode Circuits",
+          "concepts": [
+            {
+              "name": "Clipping"
+            },
+            {
+              "name": "clamping and rectifiers"
+            }
+          ]
+        },
+        {
+          "name": "BJT and MOSFET Amplifiers",
+          "concepts": [
+            {
+              "name": "Biasing"
+            },
+            {
+              "name": "AC coupling"
+            },
+            {
+              "name": "small signal analysis"
+            },
+            {
+              "name": "frequency"
+            }
+          ]
+        },
+        {
+          "name": "Op-amp Circuits",
+          "concepts": [
+            {
+              "name": "Amplifiers"
+            },
+            {
+              "name": "summers"
+            },
+            {
+              "name": "differentiators"
+            },
+            {
+              "name": "integrators"
+            },
+            {
+              "name": "active filters"
+            },
+            {
+              "name": "Schmitt"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Digital Circuits",
+      "subtopics": [
+        {
+          "name": "Number Representations",
+          "concepts": [
+            {
+              "name": "Binary"
+            },
+            {
+              "name": "integer and floating-point- numbers. Combinatorial"
+            }
+          ]
+        },
+        {
+          "name": "circuits",
+          "concepts": [
+            {
+              "name": "Boolean algebra"
+            },
+            {
+              "name": "minimization of functions using Boolean identities and Karnaugh"
+            }
+          ]
+        },
+        {
+          "name": "Digital Circuits",
+          "concepts": [
+            {
+              "name": "map"
+            },
+            {
+              "name": "logic gates and their static CMOS implementations"
+            },
+            {
+              "name": "arithmetic circuits"
+            },
+            {
+              "name": "code"
+            },
+            {
+              "name": "converters"
+            },
+            {
+              "name": "multiplexers"
+            },
+            {
+              "name": "decoders"
+            },
+            {
+              "name": "machines"
+            },
+            {
+              "name": "propagation delay"
+            },
+            {
+              "name": "setup and hold time"
+            },
+            {
+              "name": "critical path delay"
+            },
+            {
+              "name": "and control unit"
+            },
+            {
+              "name": "instruction pipelining"
+            }
+          ]
+        },
+        {
+          "name": "Sequential Circuits",
+          "concepts": [
+            {
+              "name": "Latches and flip-flops"
+            },
+            {
+              "name": "counters"
+            },
+            {
+              "name": "shift-registers"
+            },
+            {
+              "name": "finite state"
+            }
+          ]
+        },
+        {
+          "name": "Data Converters",
+          "concepts": [
+            {
+              "name": "Sample and hold circuits"
+            },
+            {
+              "name": "ADCs and DACs"
+            }
+          ]
+        },
+        {
+          "name": "Semiconductor Memories",
+          "concepts": [
+            {
+              "name": "ROM"
+            },
+            {
+              "name": "SRAM"
+            },
+            {
+              "name": "DRAM"
+            }
+          ]
+        },
+        {
+          "name": "Computer Organization",
+          "concepts": [
+            {
+              "name": "Machine instructions and addressing modes"
+            },
+            {
+              "name": "ALU"
+            },
+            {
+              "name": "data-path"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Control Systems",
+      "subtopics": [
+        {
+          "name": "Control Systems",
+          "concepts": [
+            {
+              "name": "locus plots"
+            },
+            {
+              "name": "Lag"
+            },
+            {
+              "name": "lead and lag-lead compensation"
+            },
+            {
+              "name": "State variable model and solution of"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Communications",
+      "subtopics": [
+        {
+          "name": "Random Processes",
+          "concepts": [
+            {
+              "name": "Auto correlation and power spectral density"
+            },
+            {
+              "name": "properties of white noise"
+            }
+          ]
+        },
+        {
+          "name": "Analog Communications",
+          "concepts": [
+            {
+              "name": "Amplitude modulation and demodulation"
+            },
+            {
+              "name": "angle modulation"
+            }
+          ]
+        },
+        {
+          "name": "Communications",
+          "concepts": [
+            {
+              "name": "and demodulation"
+            },
+            {
+              "name": "spectra of AM and FM"
+            },
+            {
+              "name": "super heterodyne receivers"
+            },
+            {
+              "name": "QAM)"
+            },
+            {
+              "name": "bandwidth"
+            },
+            {
+              "name": "inter-symbol interference"
+            },
+            {
+              "name": "MAP"
+            },
+            {
+              "name": "ML detection"
+            },
+            {
+              "name": "matched filter receiver"
+            },
+            {
+              "name": "SNR and BER. Fundamentals of error correction"
+            },
+            {
+              "name": "Hamming codes"
+            },
+            {
+              "name": "CRC"
+            }
+          ]
+        },
+        {
+          "name": "Information Theory",
+          "concepts": [
+            {
+              "name": "Entropy"
+            },
+            {
+              "name": "mutual information and channel capacity theorem"
+            }
+          ]
+        },
+        {
+          "name": "Digital Communications",
+          "concepts": [
+            {
+              "name": "PCM"
+            },
+            {
+              "name": "DPCM"
+            },
+            {
+              "name": "digital modulation schemes (ASK"
+            },
+            {
+              "name": "PSK"
+            },
+            {
+              "name": "FSK"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Electromagnetics",
+      "subtopics": [
+        {
+          "name": "Maxwell's Equations",
+          "concepts": [
+            {
+              "name": "Differential and integral forms and their interpretation"
+            },
+            {
+              "name": "boundary"
+            }
+          ]
+        },
+        {
+          "name": "Electromagnetics",
+          "concepts": [
+            {
+              "name": "conditions"
+            },
+            {
+              "name": "wave equation"
+            },
+            {
+              "name": "Poynting vector"
+            },
+            {
+              "name": "velocity"
+            },
+            {
+              "name": "propagation through various media"
+            },
+            {
+              "name": "skin depth"
+            },
+            {
+              "name": "impedance transformation"
+            },
+            {
+              "name": "S-parameters"
+            },
+            {
+              "name": "Smith chart. Rectangular and circular"
+            },
+            {
+              "name": "waveguides"
+            },
+            {
+              "name": "light propagation in optical fibers"
+            },
+            {
+              "name": "dipole and monopole antennas"
+            },
+            {
+              "name": "linear"
+            }
+          ]
+        },
+        {
+          "name": "Plane Waves and Properties",
+          "concepts": [
+            {
+              "name": "Reflection and refraction"
+            },
+            {
+              "name": "polarization"
+            },
+            {
+              "name": "phase and group"
+            }
+          ]
+        },
+        {
+          "name": "Transmission Lines",
+          "concepts": [
+            {
+              "name": "Equations"
+            },
+            {
+              "name": "characteristic impedance"
+            },
+            {
+              "name": "impedance matching"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

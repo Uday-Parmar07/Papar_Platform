@@ -1,12 +1,15 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import { QuestionTable } from './components/QuestionTable'
-import { downloadPdf, generateExam, verifyQuestions } from './services/api'
+import { downloadPdf, fetchSubjects, generateExam, verifyQuestions } from './services/api'
 import type { Question, VerifyResult } from './types'
 
 function App() {
   const [totalQuestions, setTotalQuestions] = useState(20)
   const [cutoffYear, setCutoffYear] = useState(2019)
+  const [subjects, setSubjects] = useState<string[]>([])
+  const [subject, setSubject] = useState('')
+  const [subjectsLoading, setSubjectsLoading] = useState(true)
   const [questions, setQuestions] = useState<Question[]>([])
   const [distribution, setDistribution] = useState<Record<string, number> | null>(null)
   const [loading, setLoading] = useState(false)
@@ -22,6 +25,32 @@ function App() {
     return Object.entries(distribution)
   }, [distribution])
 
+  useEffect(() => {
+    let active = true
+
+    async function loadSubjects() {
+      try {
+        const response = await fetchSubjects()
+        if (!active) return
+        setSubjects(response.subjects)
+        if (response.subjects.length > 0) {
+          setSubject((current) => (current ? current : response.subjects[0]))
+        }
+      } catch (err) {
+        if (!active) return
+        const message = err instanceof Error ? err.message : 'Unable to load subjects'
+        setError(message)
+      } finally {
+        if (active) setSubjectsLoading(false)
+      }
+    }
+
+    loadSubjects()
+    return () => {
+      active = false
+    }
+  }, [])
+
   const handleGenerate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setLoading(true)
@@ -29,14 +58,24 @@ function App() {
     setVerification(undefined)
     setVerificationSummary(null)
 
+    if (!subject) {
+      setError('Please select a subject before generating questions')
+      setLoading(false)
+      return
+    }
+
     try {
       const response = await generateExam({
+        subject,
         total_questions: totalQuestions,
         cutoff_year: cutoffYear,
       })
 
       setQuestions(response.questions)
       setDistribution(response.distribution)
+      if (response.subject) {
+        setSubject(response.subject)
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to generate questions')
       setQuestions([])
@@ -68,7 +107,7 @@ function App() {
     try {
       const blob = await downloadPdf({
         questions,
-        title: `Practice Paper (${totalQuestions} Questions)`,
+        title: `${subject || 'Practice'} Paper (${totalQuestions} Questions)`,
       })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -100,6 +139,27 @@ function App() {
           </div>
           <form className="form" onSubmit={handleGenerate}>
             <label className="field">
+              <span>Subject</span>
+              <select
+                value={subject}
+                onChange={(event) => setSubject(event.target.value)}
+                disabled={subjectsLoading || loading || subjects.length === 0}
+                required
+              >
+                {subjects.length === 0 ? (
+                  <option value="" disabled>
+                    {subjectsLoading ? 'Loading subjects…' : 'No subjects available'}
+                  </option>
+                ) : (
+                  subjects.map((subjectName) => (
+                    <option key={subjectName} value={subjectName}>
+                      {subjectName}
+                    </option>
+                  ))
+                )}
+              </select>
+            </label>
+            <label className="field">
               <span>Total questions</span>
               <input
                 type="number"
@@ -120,7 +180,7 @@ function App() {
                 required
               />
             </label>
-            <button type="submit" className="primary" disabled={loading}>
+            <button type="submit" className="primary" disabled={loading || subjects.length === 0}>
               {loading ? 'Generating…' : 'Generate questions'}
             </button>
           </form>

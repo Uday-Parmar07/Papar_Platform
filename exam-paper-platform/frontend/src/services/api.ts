@@ -1,4 +1,10 @@
-import type { GenerateExamResponse, Question, VerifyResponse } from '../types'
+import type {
+  GenerateExamPayload,
+  GenerateExamResponse,
+  Question,
+  SubjectListResponse,
+  VerifyResponse,
+} from '../types'
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api/v1'
 
@@ -14,16 +20,18 @@ async function handleResponse<T>(response: Response): Promise<T> {
   return response.json() as Promise<T>
 }
 
-export async function generateExam(payload: {
-  total_questions: number
-  cutoff_year: number
-}): Promise<GenerateExamResponse> {
+export async function generateExam(payload: GenerateExamPayload): Promise<GenerateExamResponse> {
   const response = await fetch(`${API_BASE_URL}/exams/generate`, {
     method: 'POST',
     headers: jsonHeaders,
     body: JSON.stringify(payload),
   })
   return handleResponse<GenerateExamResponse>(response)
+}
+
+export async function fetchSubjects(): Promise<SubjectListResponse> {
+  const response = await fetch(`${API_BASE_URL}/exams/subjects`)
+  return handleResponse<SubjectListResponse>(response)
 }
 
 export async function verifyQuestions(questions: Question[]): Promise<VerifyResponse> {

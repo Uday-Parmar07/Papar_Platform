@@ -23,8 +23,8 @@ DIFFICULTY_GUIDELINES = {
         "Provide one clear data point or condition so the question is answerable."
     ),
     "Medium": (
-        "Incorporate 2–3 reasoning steps, possibly blending theory with a short calculation. "
-        "State any circuit parameters or assumptions explicitly."
+        "Incorporate 2–3 reasoning steps, blending theory with calculation or reasoning. "
+        "State any required assumptions explicitly."
     ),
     "Hard": (
         "Require multi-step reasoning or analysis of interacting phenomena. "
@@ -36,18 +36,19 @@ DIFFICULTY_GUIDELINES = {
 # Prompt builder
 # -----------------------------
 
-def build_prompt(concept: str, difficulty: str) -> str:
+def build_prompt(concept: str, difficulty: str, subject: str) -> str:
+    subject_label = subject or "Engineering"
     return f"""
-You are an expert GATE Electrical Engineering question setter.
+You are an expert GATE {subject_label} question setter.
 
 TASK:
-Generate ONE exam-quality GATE EE question.
+Generate ONE exam-quality GATE {subject_label} question.
 
 CONSTRAINTS:
 - Concept: {concept}
 - Difficulty: {difficulty}
 - {DIFFICULTY_GUIDELINES[difficulty]}
-- Syllabus strictly limited to Electrical Engineering (GATE level)
+- Syllabus strictly limited to {subject_label} (GATE level)
 - Target length: 45-120 words. Provide enough context, numeric values, and conditions so the question is self-contained.
 - Do NOT include solution
 - Do NOT include explanation
@@ -70,8 +71,8 @@ QUESTION:
 # Question generation
 # -----------------------------
 
-def generate_question(concept: str, difficulty: str) -> Dict:
-    prompt = build_prompt(concept, difficulty)
+def generate_question(concept: str, difficulty: str, subject: str) -> Dict:
+    prompt = build_prompt(concept, difficulty, subject)
 
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",  # Groq LLaMA 70B (use if available)

@@ -1,27 +1,21 @@
-"""
-Syllabus Ingestion Script
--------------------------
-Reads syllabus structure from JSON and populates Neo4j graph.
+"""Populate Neo4j with syllabus content from JSON files."""
 
-Expected graph hierarchy:
-Subject -> Topic -> SubTopic -> Concept
-Concept -> PREREQUISITE_OF -> Concept
-
-Run:
-    python scripts/ingest_syllabus.py syllabus.json
-"""
-
+import argparse
 import json
 import sys
 from pathlib import Path
-from app.utils.neo4j import resolve_neo4j_url
+from typing import Iterable, List
 
-# Ensure project root is importable when running as a script
+# Ensure project root is importable before importing application modules.
 ROOT_DIR = Path(__file__).resolve().parents[1]
 if str(ROOT_DIR) not in sys.path:
     sys.path.insert(0, str(ROOT_DIR))
 
+from app.utils.neo4j import resolve_neo4j_url
+
 from neomodel import config, db
+
+DEFAULT_INPUT_DIR = ROOT_DIR / "json_syllabus"
 
 # Import graph schema
 from app.graph.schema import Subject, Topic, SubTopic, Concept
@@ -106,20 +100,59 @@ def ingest_syllabus(syllabus: dict):
 # MAIN
 # ===============================
 
+def collect_json_files(targets: Iterable[Path]) -> List[Path]:
+    files: List[Path] = []
+    for target in targets:
+        if target.is_dir():
+            files.extend(sorted(target.glob("*.json")))
+        elif target.suffix.lower() == ".json" and target.exists():
+            files.append(target)
+        else:
+            raise FileNotFoundError(f"JSON not found: {target}")
+
+    unique: List[Path] = []
+    seen = set()
+    for path in files:
+        resolved = path.resolve()
+        if resolved not in seen:
+            seen.add(resolved)
+            unique.append(resolved)
+
+    if not unique:
+        raise FileNotFoundError("No JSON files discovered from provided inputs")
+
+    return unique
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Ingest syllabus JSON files into Neo4j"
+    )
+    parser.add_argument(
+        "inputs",
+        nargs="*",
+        type=Path,
+        default=[DEFAULT_INPUT_DIR],
+        help="JSON file(s) or directories containing JSON syllabi. Defaults to json_syllabus."
+    )
+    return parser
+
+
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: python ingest_syllabus.py syllabus.json")
+    args = build_parser().parse_args()
+
+    try:
+        json_files = collect_json_files(args.inputs)
+    except FileNotFoundError as exc:
+        print(f"❌ {exc}")
         sys.exit(1)
 
-    syllabus_path = Path(sys.argv[1])
-    if not syllabus_path.exists():
-        print(f"❌ File not found: {syllabus_path}")
-        sys.exit(1)
+    for syllabus_path in json_files:
+        print(f"🚀 Ingesting {syllabus_path.name}")
+        with open(syllabus_path, "r", encoding="utf-8") as f:
+            syllabus = json.load(f)
 
-    with open(syllabus_path, "r", encoding="utf-8") as f:
-        syllabus = json.load(f)
-
-    ingest_syllabus(syllabus)
+        ingest_syllabus(syllabus)
 
 
 if __name__ == "__main__":

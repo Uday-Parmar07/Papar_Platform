@@ -1,0 +1,812 @@
+{
+  "subject": "MT 2026",
+  "topics": [
+    {
+      "name": "Engineering Mathematics",
+      "subtopics": [
+        {
+          "name": "Linear Algebra",
+          "concepts": [
+            {
+              "name": "Matrices and Determinants"
+            },
+            {
+              "name": "Systems of linear equations"
+            },
+            {
+              "name": "Eigen values and"
+            }
+          ]
+        },
+        {
+          "name": "Calculus",
+          "concepts": [
+            {
+              "name": "Limit"
+            },
+            {
+              "name": "Continuity and Differentiability"
+            },
+            {
+              "name": "Partial derivatives"
+            },
+            {
+              "name": "Maxima and minima"
+            }
+          ]
+        },
+        {
+          "name": "Vector Calculus",
+          "concepts": [
+            {
+              "name": "Gradient"
+            },
+            {
+              "name": "Divergence and Curl"
+            },
+            {
+              "name": "Line"
+            },
+            {
+              "name": "Surface and volume integrals"
+            },
+            {
+              "name": "Stokes"
+            }
+          ]
+        },
+        {
+          "name": "Differential Equations",
+          "concepts": [
+            {
+              "name": "Linear and non-linear first order ODEs"
+            },
+            {
+              "name": "Higher order linear ODEs with"
+            }
+          ]
+        },
+        {
+          "name": "Engineering Mathematics",
+          "concepts": [
+            {
+              "name": "Laplace"
+            },
+            {
+              "name": "one dimensional heat and wave equations"
+            },
+            {
+              "name": "probability"
+            },
+            {
+              "name": "Mean"
+            },
+            {
+              "name": "median"
+            },
+            {
+              "name": "mode and standard deviation"
+            },
+            {
+              "name": "Random variables"
+            },
+            {
+              "name": "Poisson"
+            }
+          ]
+        },
+        {
+          "name": "Probability and Statistics",
+          "concepts": [
+            {
+              "name": "Definitions of probability and sampling theorems"
+            },
+            {
+              "name": "conditional"
+            }
+          ]
+        },
+        {
+          "name": "Numerical Methods",
+          "concepts": [
+            {
+              "name": "Solutions of linear and non-linear (Bisection"
+            },
+            {
+              "name": "Secant"
+            },
+            {
+              "name": "Newton-"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Metallurgical Thermodynamics",
+      "subtopics": [
+        {
+          "name": "Laws of Thermodynamics",
+          "concepts": [
+            {
+              "name": "First law – energy conservation"
+            },
+            {
+              "name": "Second law - entropy"
+            },
+            {
+              "name": "Enthalpy"
+            }
+          ]
+        },
+        {
+          "name": "Metallurgical Thermodynamics",
+          "concepts": [
+            {
+              "name": "metallurgical systems"
+            },
+            {
+              "name": "solutions"
+            },
+            {
+              "name": "ideal and regular solutions"
+            },
+            {
+              "name": "Gibbs phase rule"
+            },
+            {
+              "name": "phase"
+            },
+            {
+              "name": "equilibria"
+            },
+            {
+              "name": "binary phase diagram and lever rule"
+            },
+            {
+              "name": "free-energy vs. composition diagrams"
+            },
+            {
+              "name": "Equilibrium constant"
+            },
+            {
+              "name": "Activity"
+            },
+            {
+              "name": "Ellingham and phase stability diagrams"
+            },
+            {
+              "name": "Thermodynamics of"
+            },
+            {
+              "name": "point defects"
+            },
+            {
+              "name": "surfaces and interfaces"
+            },
+            {
+              "name": "adsorption and segregation phenomena"
+            }
+          ]
+        },
+        {
+          "name": "Electrochemistry",
+          "concepts": [
+            {
+              "name": "Single electrode potential"
+            },
+            {
+              "name": "Electrochemical cells"
+            },
+            {
+              "name": "Nernst equation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Transport Phenomena and Rate Processes",
+      "subtopics": [
+        {
+          "name": "Momentum Transfer",
+          "concepts": [
+            {
+              "name": "Concept of viscosity"
+            },
+            {
+              "name": "shell balances"
+            },
+            {
+              "name": "Bernoulli’s equation"
+            },
+            {
+              "name": "mechanical"
+            }
+          ]
+        },
+        {
+          "name": "Transport Phenomena and Rate Processes",
+          "concepts": [
+            {
+              "name": "energy balance equation"
+            },
+            {
+              "name": "flow past plane surfaces and through pipes"
+            },
+            {
+              "name": "relation"
+            },
+            {
+              "name": "heterogeneous reactions"
+            },
+            {
+              "name": "oxidation kinetics"
+            }
+          ]
+        },
+        {
+          "name": "Heat transfer",
+          "concepts": [
+            {
+              "name": "Conduction"
+            },
+            {
+              "name": "Fourier’s Law"
+            },
+            {
+              "name": "1-D steady state conduction. Convection: Heat"
+            }
+          ]
+        },
+        {
+          "name": "Radiation",
+          "concepts": [
+            {
+              "name": "Black body radiation"
+            },
+            {
+              "name": "Stefan-Boltzman Law"
+            },
+            {
+              "name": "Kirchhoff’s Law"
+            }
+          ]
+        },
+        {
+          "name": "Mass Transfer",
+          "concepts": [
+            {
+              "name": "Diffusion and Fick’s laws"
+            },
+            {
+              "name": "Mass transfer coefficients"
+            }
+          ]
+        },
+        {
+          "name": "Dimensional Analysis",
+          "concepts": [
+            {
+              "name": "Buckingham Pi theorem"
+            },
+            {
+              "name": "Significance of dimensionless numbers"
+            }
+          ]
+        },
+        {
+          "name": "Basic Laws of Chemical Kinetics",
+          "concepts": [
+            {
+              "name": "First order reactions"
+            },
+            {
+              "name": "reaction rate constant"
+            },
+            {
+              "name": "Arrhenius"
+            }
+          ]
+        },
+        {
+          "name": "Electrochemical Kinetics",
+          "concepts": [
+            {
+              "name": "Polarization"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mineral Processing and Extractive Metallurgy",
+      "subtopics": [
+        {
+          "name": "Mineral Processing and Extractive Metallurgy",
+          "concepts": [
+            {
+              "name": "Comminution techniques"
+            },
+            {
+              "name": "Size classification"
+            },
+            {
+              "name": "Flotation"
+            },
+            {
+              "name": "Gravity and other methods of"
+            },
+            {
+              "name": "extraction of non-ferrous metals – aluminium"
+            },
+            {
+              "name": "copper and titanium"
+            },
+            {
+              "name": "Production of metallurgical coke. Other methods of iron making (COREX"
+            },
+            {
+              "name": "MIDRE)"
+            },
+            {
+              "name": "inclusion shape control"
+            },
+            {
+              "name": "principles of degassing methods"
+            },
+            {
+              "name": "Basics of stainless steel"
+            },
+            {
+              "name": "segregation"
+            },
+            {
+              "name": "inclusion control"
+            }
+          ]
+        },
+        {
+          "name": "mineral beneficiation; Agglomeration",
+          "concepts": [
+            {
+              "name": "sintering"
+            },
+            {
+              "name": "pelletizing and briquetting"
+            }
+          ]
+        },
+        {
+          "name": "Iron and Steel Making",
+          "concepts": [
+            {
+              "name": "Material and heat balance in blast furnace"
+            },
+            {
+              "name": "Structure and properties"
+            }
+          ]
+        },
+        {
+          "name": "Primary Steel Making",
+          "concepts": [
+            {
+              "name": "Basic oxygen furnace"
+            },
+            {
+              "name": "process dynamics"
+            },
+            {
+              "name": "oxidation reactions"
+            }
+          ]
+        },
+        {
+          "name": "Secondary Steel Making",
+          "concepts": [
+            {
+              "name": "Ladle process – deoxidation"
+            },
+            {
+              "name": "argon stirring"
+            },
+            {
+              "name": "desulphurization"
+            }
+          ]
+        },
+        {
+          "name": "Continuous Casting",
+          "concepts": [
+            {
+              "name": "Fluid flow in the tundish and mould"
+            },
+            {
+              "name": "heat transfer in the mould"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Physical Metallurgy",
+      "subtopics": [
+        {
+          "name": "Chemical Bonding",
+          "concepts": [
+            {
+              "name": "Ionic"
+            },
+            {
+              "name": "covalent"
+            },
+            {
+              "name": "metallic"
+            },
+            {
+              "name": "and secondary bonding in materials"
+            }
+          ]
+        },
+        {
+          "name": "Physical Metallurgy",
+          "concepts": [
+            {
+              "name": "Crystal structure of solids – metals and alloys"
+            },
+            {
+              "name": "ionic and covalent solids"
+            },
+            {
+              "name": "and polymers"
+            },
+            {
+              "name": "Kinetics Solidification in isomorphous"
+            },
+            {
+              "name": "eutectic and peritectic systems"
+            },
+            {
+              "name": "cast structures"
+            },
+            {
+              "name": "and macrosegregation"
+            },
+            {
+              "name": "dendritic solidification and constitutional supercooling"
+            },
+            {
+              "name": "coring and"
+            },
+            {
+              "name": "transformation"
+            },
+            {
+              "name": "discontinuous precipitation"
+            },
+            {
+              "name": "eutectoid transformation"
+            },
+            {
+              "name": "diffusionless"
+            },
+            {
+              "name": "transformations"
+            },
+            {
+              "name": "Precipitate coarsening"
+            },
+            {
+              "name": "Gibbs-Thomson effect"
+            },
+            {
+              "name": "Principles of heat treatment of steels"
+            },
+            {
+              "name": "TTT and CCT diagrams"
+            },
+            {
+              "name": "Surface hardening treatments"
+            },
+            {
+              "name": "Recovery"
+            },
+            {
+              "name": "recrystallization and grain growth"
+            },
+            {
+              "name": "Heat treatment of cast iron and aluminium"
+            },
+            {
+              "name": "Electronic"
+            },
+            {
+              "name": "magnetic and optical properties of materials"
+            }
+          ]
+        },
+        {
+          "name": "X-ray Diffraction",
+          "concepts": [
+            {
+              "name": "Bragg’s law"
+            },
+            {
+              "name": "optical metallography"
+            },
+            {
+              "name": "principles of SEM imaging"
+            }
+          ]
+        },
+        {
+          "name": "Crystal Imperfections",
+          "concepts": [
+            {
+              "name": "Point"
+            },
+            {
+              "name": "line and surface defects"
+            },
+            {
+              "name": "Coherent"
+            },
+            {
+              "name": "semi-coherent and"
+            }
+          ]
+        },
+        {
+          "name": "Diffusion in Solids",
+          "concepts": [
+            {
+              "name": "Diffusion equation"
+            },
+            {
+              "name": "steady state and error function solutions"
+            },
+            {
+              "name": "Examples-"
+            }
+          ]
+        },
+        {
+          "name": "Phase Transformation",
+          "concepts": [
+            {
+              "name": "Driving force"
+            },
+            {
+              "name": "Homogeneous and heterogeneous nucleation"
+            },
+            {
+              "name": "growth"
+            }
+          ]
+        },
+        {
+          "name": "Solid-state Transformations",
+          "concepts": [
+            {
+              "name": "Precipitation"
+            },
+            {
+              "name": "spinoidal decomposition"
+            },
+            {
+              "name": "ordering"
+            },
+            {
+              "name": "massive"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Mechanical Metallurgy",
+      "subtopics": [
+        {
+          "name": "Mechanical Metallurgy",
+          "concepts": [
+            {
+              "name": "Strain tensor and stress tensor"
+            },
+            {
+              "name": "Representation by Mohr’s circle"
+            },
+            {
+              "name": "elasticity"
+            },
+            {
+              "name": "stiffness and"
+            },
+            {
+              "name": "compliance tensor"
+            },
+            {
+              "name": "Yield criteria"
+            },
+            {
+              "name": "Plastic deformation by slip and twinning"
+            },
+            {
+              "name": "dislocations"
+            },
+            {
+              "name": "stress fields around dislocations"
+            },
+            {
+              "name": "Partial dislocations"
+            },
+            {
+              "name": "dislocation interactions"
+            },
+            {
+              "name": "solid solution"
+            },
+            {
+              "name": "precipitation and dispersion"
+            },
+            {
+              "name": "Fracture behaviour"
+            },
+            {
+              "name": "Griffith theory"
+            },
+            {
+              "name": "linear elastic fracture mechanics"
+            },
+            {
+              "name": "fracture toughness"
+            },
+            {
+              "name": "fractography"
+            },
+            {
+              "name": "ductile to brittle transition"
+            },
+            {
+              "name": "Mechanisms of high temperature deformation and failure"
+            },
+            {
+              "name": "creep and stress rupture"
+            },
+            {
+              "name": "stress"
+            }
+          ]
+        },
+        {
+          "name": "Dislocation Theory",
+          "concepts": [
+            {
+              "name": "Edge"
+            },
+            {
+              "name": "screw and mixed dislocations"
+            },
+            {
+              "name": "source and multiplication of"
+            }
+          ]
+        },
+        {
+          "name": "Strengthening Mechanisms",
+          "concepts": [
+            {
+              "name": "Work/strain hardening"
+            },
+            {
+              "name": "strengthening due to grain boundaries"
+            }
+          ]
+        },
+        {
+          "name": "Fatigue",
+          "concepts": [
+            {
+              "name": "Cyclic stress strain behaviour - low and high cycle fatigue"
+            },
+            {
+              "name": "crack growth"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Manufacturing Processes",
+      "subtopics": [
+        {
+          "name": "Metal Casting",
+          "concepts": [
+            {
+              "name": "Mould design involving feeding"
+            },
+            {
+              "name": "gating and risering"
+            },
+            {
+              "name": "casting practices"
+            }
+          ]
+        },
+        {
+          "name": "Hot, Warm and Cold Working of Metals",
+          "concepts": [
+            {
+              "name": "Metal forming – fundamentals of metal forming"
+            }
+          ]
+        },
+        {
+          "name": "Manufacturing Processes",
+          "concepts": [
+            {
+              "name": "processes of rolling"
+            },
+            {
+              "name": "forging"
+            },
+            {
+              "name": "extrusion"
+            },
+            {
+              "name": "wire drawing and sheet metal forming"
+            },
+            {
+              "name": "defects in"
+            }
+          ]
+        },
+        {
+          "name": "Metal Joining",
+          "concepts": [
+            {
+              "name": "Principles of soldering"
+            },
+            {
+              "name": "brazing and welding"
+            },
+            {
+              "name": "welding metallurgy"
+            },
+            {
+              "name": "defects in"
+            }
+          ]
+        },
+        {
+          "name": "Powder Metallurgy",
+          "concepts": [
+            {
+              "name": "production of powders"
+            },
+            {
+              "name": "compaction and sintering"
+            }
+          ]
+        },
+        {
+          "name": "Non-destructive Testing (NDT)",
+          "concepts": [
+            {
+              "name": "Dye-penetrant"
+            },
+            {
+              "name": "ultrasonic"
+            },
+            {
+              "name": "radiography"
+            },
+            {
+              "name": "eddy current"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
