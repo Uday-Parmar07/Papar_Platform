@@ -52,6 +52,7 @@ pinecone-client==3.2.2
 # ===============================
 openai==1.14.3
 groq==0.4.2
+sentence-transformers==2.6.1
 
 # ===============================
 # Observability & Evaluation
