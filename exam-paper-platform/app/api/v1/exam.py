@@ -5,6 +5,7 @@ from app.schemas.exam import (
 	GenerateExamRequest,
 	GenerateExamResponse,
 	SubjectListResponse,
+	TopicListResponse,
 	VerifyQuestionsRequest,
 	VerifyQuestionsResponse,
 	PdfRequest,
@@ -12,7 +13,8 @@ from app.schemas.exam import (
 from app.services.exam_service import generate_exam
 from app.services.pdf_service import render_questions_pdf
 from app.llm.nodes.validate import validate_question
-from app.graph.queries import list_subject_names
+from app.graph.queries import list_subjects as graph_list_subjects
+from app.graph.queries import list_topics_for_subject, resolve_subject_label
 
 
 router = APIRouter()
@@ -25,6 +27,7 @@ def generate_exam_endpoint(payload: GenerateExamRequest) -> GenerateExamResponse
 			total_questions=payload.total_questions,
 			cutoff_year=payload.cutoff_year,
 			subject=payload.subject,
+			topics=payload.topics,
 		)
 	except ValueError as exc:
 		raise HTTPException(status_code=400, detail=str(exc)) from exc
@@ -32,8 +35,18 @@ def generate_exam_endpoint(payload: GenerateExamRequest) -> GenerateExamResponse
 
 @router.get("/subjects", response_model=SubjectListResponse)
 def list_subjects() -> SubjectListResponse:
-	subjects = list_subject_names()
+	subjects = graph_list_subjects()
 	return SubjectListResponse(subjects=subjects)
+
+
+@router.get("/subjects/{subject_id}/topics", response_model=TopicListResponse)
+def list_topics(subject_id: str) -> TopicListResponse:
+	topics = list_topics_for_subject(subject_id)
+	if not topics:
+		subject_exists = any(subject["id"] == subject_id for subject in graph_list_subjects())
+		if not subject_exists:
+			raise HTTPException(status_code=404, detail=f"Subject '{resolve_subject_label(subject_id)}' not found")
+	return TopicListResponse(topics=topics)
 
 
 @router.post("/verify", response_model=VerifyQuestionsResponse)

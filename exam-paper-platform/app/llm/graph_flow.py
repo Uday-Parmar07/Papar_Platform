@@ -1,4 +1,4 @@
-from typing import TypedDict, List
+from typing import List, Optional, TypedDict
 from langgraph.graph import StateGraph, END
 
 from app.llm.paper_planner import build_paper_blueprint
@@ -16,6 +16,9 @@ class PaperState(TypedDict):
     total_questions: int
     cutoff_year: int
     subject: str
+    subject_label: Optional[str]
+    topics: Optional[List[str]]
+    topics_selected: Optional[List[str]]
 
     blueprint: dict
     questions: List[dict]
@@ -29,19 +32,23 @@ class PaperState(TypedDict):
 # -----------------------------
 
 def retrieve_concepts(state: PaperState):
+    topics = state.get("topics")
     return {
         "high_frequency": get_high_frequency_concepts(
             limit=int(state["total_questions"] * 0.5),
-            subject=state.get("subject")
+            subject=state.get("subject"),
+            topics=topics,
         ),
         "recency_gap": get_recency_gap_concepts(
             cutoff_year=state["cutoff_year"],
             limit=int(state["total_questions"] * 0.3),
-            subject=state.get("subject")
+            subject=state.get("subject"),
+            topics=topics,
         ),
         "never_asked": get_never_asked_concepts(
             limit=int(state["total_questions"] * 0.2),
-            subject=state.get("subject")
+            subject=state.get("subject"),
+            topics=topics,
         )
     }
 
@@ -53,7 +60,10 @@ def build_blueprint_node(state: PaperState):
     blueprint = build_paper_blueprint(
         total_questions=state["total_questions"],
         cutoff_year=state["cutoff_year"],
-        subject=state.get("subject")
+        subject=state.get("subject"),
+        subject_label=state.get("subject_label"),
+        topics=state.get("topics"),
+        topics_selected=state.get("topics_selected"),
     )
     return {"blueprint": blueprint}
 
@@ -68,13 +78,15 @@ from app.llm.nodes.generate import generate_question
 def generate_questions_node(state: PaperState):
     questions = []
 
-    subject = state.get("subject") or getattr(state.get("blueprint"), "subject", "")
+    subject_label = state.get("subject_label") or getattr(state.get("blueprint"), "subject_label", "")
+    topics_filter = state.get("topics")
 
     for item in state["blueprint"].questions:
         q = generate_question(
             concept=item.concept,
             difficulty=item.difficulty,
-            subject=subject or ""
+            subject=subject_label or "",
+            topics=topics_filter,
         )
         questions.append(q)
 
@@ -123,13 +135,15 @@ def regenerate_failed_questions(state: PaperState):
 
     regenerated = []
 
-    subject = state.get("subject") or getattr(state.get("blueprint"), "subject", "")
+    subject_label = state.get("subject_label") or getattr(state.get("blueprint"), "subject_label", "")
+    topics_filter = state.get("topics")
 
     for q in state["failed_questions"]:
         new_q = generate_question(
             concept=q["concept"],
             difficulty=q["difficulty"],
-            subject=subject or ""
+            subject=subject_label or "",
+            topics=topics_filter,
         )
         regenerated.append(new_q)
 

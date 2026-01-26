@@ -1,10 +1,10 @@
 from functools import lru_cache
-from typing import List
+from typing import List, Optional
 
 from app.schemas.exam import GenerateExamResponse, Question
 from app.llm.graph_flow import build_graph
 from app.llm.paper_planner import build_paper_blueprint
-from app.graph.queries import list_subject_names
+from app.graph.queries import list_subjects, list_topics_for_subject, resolve_subject_label
 
 
 @lru_cache()
@@ -12,31 +12,66 @@ def _compiled_graph():
 	return build_graph()
 
 
-def _question_from_blueprint_item(item, subject: str) -> Question:
+def _question_from_blueprint_item(item, subject_label: str) -> Question:
 	concept = getattr(item, "concept", "Unknown concept")
 	difficulty = getattr(item, "difficulty", "Medium")
 	prompt = (
-		f"Describe a question on {concept} from the {subject} syllabus appropriate for {difficulty} "
+		f"Describe a question on {concept} from the {subject_label} syllabus appropriate for {difficulty} "
 		"level candidates."
 	)
 	return Question(concept=concept, difficulty=difficulty, question=prompt)
 
 
-def generate_exam(total_questions: int, cutoff_year: int, subject: str) -> GenerateExamResponse:
-	subject_name = subject.strip()
-	if not subject_name:
+def generate_exam(
+	total_questions: int,
+	cutoff_year: int,
+	subject: str,
+	topics: Optional[List[str]] = None,
+) -> GenerateExamResponse:
+	subject_id = subject.strip()
+	if not subject_id:
 		raise ValueError("Subject is required")
 
-	available_subjects = list_subject_names()
+	available_subjects = list_subjects()
 	if not available_subjects:
 		raise ValueError("No subjects available. Please ingest syllabus data first.")
-	if subject_name not in available_subjects:
-		raise ValueError(f"Unknown subject: {subject_name}")
+
+	subject_lookup = {item["id"]: item["name"] for item in available_subjects}
+	if subject_id not in subject_lookup:
+		raise ValueError(f"Unknown subject: {resolve_subject_label(subject_id)}")
+
+	subject_label = subject_lookup[subject_id]
+	available_topics = list_topics_for_subject(subject_id)
+	if not available_topics:
+		raise ValueError(
+			f"No topics found for {subject_label}. Please ingest syllabus data before generating questions."
+		)
+
+	topics = topics or []
+	requested_topics = [topic.strip() for topic in topics if topic and topic.strip()]
+	if requested_topics:
+		invalid = sorted({topic for topic in requested_topics if topic not in available_topics})
+		if invalid:
+			raise ValueError(
+				f"Unknown topic(s) for {subject_label}: {', '.join(invalid)}"
+			)
+		selected_topics = requested_topics
+	else:
+		selected_topics = available_topics
+
+	topics_filter = (
+		selected_topics
+		if set(selected_topics) != set(available_topics)
+		else None
+	)
 
 	blueprint = build_paper_blueprint(
 		total_questions=total_questions,
 		cutoff_year=cutoff_year,
-		subject=subject_name,
+		subject=subject_id,
+		subject_label=subject_label,
+		topics=topics_filter,
+		topics_selected=selected_topics,
 	)
 
 	distribution = dict(blueprint.distribution)
@@ -49,7 +84,10 @@ def generate_exam(total_questions: int, cutoff_year: int, subject: str) -> Gener
 			"retry_count": 0,
 			"final_questions": [],
 			"failed_questions": [],
-			"subject": subject_name,
+			"subject": subject_id,
+			"subject_label": subject_label,
+			"topics": topics_filter,
+			"topics_selected": selected_topics,
 		})
 		generated_questions = result.get("final_questions") or result.get("validated_questions") or []
 	except Exception:
@@ -68,11 +106,13 @@ def generate_exam(total_questions: int, cutoff_year: int, subject: str) -> Gener
 			)
 
 	if not questions:
-		questions = [_question_from_blueprint_item(item, subject_name) for item in blueprint.questions]
+		questions = [_question_from_blueprint_item(item, subject_label) for item in blueprint.questions]
 
 	return GenerateExamResponse(
 		total_questions=len(questions),
 		distribution=distribution,
 		questions=questions,
-		subject=subject_name,
+		subject_id=subject_id,
+		subject_name=subject_label,
+		topics=selected_topics,
 	)

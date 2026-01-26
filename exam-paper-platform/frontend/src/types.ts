@@ -8,13 +8,16 @@ export interface GenerateExamPayload {
   subject: string
   total_questions: number
   cutoff_year: number
+  topics?: string[]
 }
 
 export interface GenerateExamResponse {
   total_questions: number
   distribution: Record<string, number>
   questions: Question[]
-  subject: string
+  subject_id: string
+  subject_name: string
+  topics: string[]
 }
 
 export interface VerifyResult extends Question {
@@ -29,6 +32,15 @@ export interface VerifyResponse {
   results: VerifyResult[]
 }
 
+export interface SubjectOption {
+  id: string
+  name: string
+}
+
 export interface SubjectListResponse {
-  subjects: string[]
+  subjects: SubjectOption[]
+}
+
+export interface TopicListResponse {
+  topics: string[]
 }

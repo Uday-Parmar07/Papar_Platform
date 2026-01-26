@@ -72,6 +72,54 @@
   font-weight: 600;
 }
 
+.field.fieldset {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.fieldset legend {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #111827;
+  padding: 0 6px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+.option input[type='radio'] {
+  accent-color: #111827;
+}
+
+.topic-grid {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  background: #f9fafb;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.chip input[type='checkbox'] {
+  accent-color: #111827;
+}
+
 .field input {
   border: 1px solid #d1d5db;
   border-radius: 10px;
@@ -128,6 +176,27 @@ button:not(:disabled):active {
   display: grid;
   gap: 12px;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.selection-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px dashed #d1d5db;
+  border-radius: 12px;
+  background: #f9fafb;
+  color: #1f2937;
+}
+
+.summary-title {
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.summary-meta {
+  font-size: 0.9rem;
+  color: #4b5563;
 }
 
 .stat {

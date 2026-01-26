@@ -1,15 +1,20 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import { QuestionTable } from './components/QuestionTable'
-import { downloadPdf, fetchSubjects, generateExam, verifyQuestions } from './services/api'
-import type { Question, VerifyResult } from './types'
+import { downloadPdf, fetchSubjects, fetchTopics, generateExam, verifyQuestions } from './services/api'
+import type { Question, SubjectOption, VerifyResult } from './types'
 
 function App() {
   const [totalQuestions, setTotalQuestions] = useState(20)
   const [cutoffYear, setCutoffYear] = useState(2019)
-  const [subjects, setSubjects] = useState<string[]>([])
-  const [subject, setSubject] = useState('')
+  const [subjects, setSubjects] = useState<SubjectOption[]>([])
+  const [subjectId, setSubjectId] = useState('')
+  const [subjectName, setSubjectName] = useState('')
   const [subjectsLoading, setSubjectsLoading] = useState(true)
+  const [topics, setTopics] = useState<string[]>([])
+  const [topicsMode, setTopicsMode] = useState<'all' | 'custom'>('all')
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([])
+  const [topicsLoading, setTopicsLoading] = useState(false)
   const [questions, setQuestions] = useState<Question[]>([])
   const [distribution, setDistribution] = useState<Record<string, number> | null>(null)
   const [loading, setLoading] = useState(false)
@@ -25,6 +30,24 @@ function App() {
     return Object.entries(distribution)
   }, [distribution])
 
+  const topicSummary = useMemo(() => {
+    if (topics.length === 0) {
+      return 'Topics will appear once data is ingested.'
+    }
+
+    if (topicsMode === 'all' || selectedTopics.length === topics.length) {
+      return `All ${topics.length} topics selected`
+    }
+
+    if (selectedTopics.length === 0) {
+      return 'No topics selected'
+    }
+
+    const preview = selectedTopics.slice(0, 3).join(', ')
+    const remainder = selectedTopics.length - 3
+    return remainder > 0 ? `${preview} (+${remainder} more)` : preview
+  }, [topicsMode, selectedTopics, topics])
+
   useEffect(() => {
     let active = true
 
@@ -34,7 +57,8 @@ function App() {
         if (!active) return
         setSubjects(response.subjects)
         if (response.subjects.length > 0) {
-          setSubject((current) => (current ? current : response.subjects[0]))
+          setSubjectId((current) => (current ? current : response.subjects[0].id))
+          setSubjectName((current) => (current ? current : response.subjects[0].name))
         }
       } catch (err) {
         if (!active) return
@@ -51,6 +75,41 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    let active = true
+
+    async function loadTopics() {
+      if (!subjectId) {
+        setTopics([])
+        setSelectedTopics([])
+        return
+      }
+
+      setTopicsLoading(true)
+      setTopics([])
+      setSelectedTopics([])
+      setTopicsMode('all')
+
+      try {
+        const response = await fetchTopics(subjectId)
+        if (!active) return
+        setTopics(response.topics)
+      } catch (err) {
+        if (!active) return
+        const message = err instanceof Error ? err.message : 'Unable to load topics'
+        setError(message)
+      } finally {
+        if (active) setTopicsLoading(false)
+      }
+    }
+
+    loadTopics()
+
+    return () => {
+      active = false
+    }
+  }, [subjectId])
+
   const handleGenerate = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setLoading(true)
@@ -58,23 +117,46 @@ function App() {
     setVerification(undefined)
     setVerificationSummary(null)
 
-    if (!subject) {
+    if (!subjectId) {
       setError('Please select a subject before generating questions')
       setLoading(false)
       return
     }
 
+    if (topicsMode === 'custom' && selectedTopics.length === 0) {
+      setError('Please choose at least one topic or switch back to all topics')
+      setLoading(false)
+      return
+    }
+
+    const payloadTopics =
+      topicsMode === 'custom' && selectedTopics.length > 0 && selectedTopics.length !== topics.length
+        ? selectedTopics
+        : undefined
+
     try {
       const response = await generateExam({
-        subject,
+        subject: subjectId,
         total_questions: totalQuestions,
         cutoff_year: cutoffYear,
+        topics: payloadTopics,
       })
 
       setQuestions(response.questions)
       setDistribution(response.distribution)
-      if (response.subject) {
-        setSubject(response.subject)
+      if (response.subject_id) {
+        setSubjectId(response.subject_id)
+      }
+      if (response.subject_name) {
+        setSubjectName(response.subject_name)
+      }
+      if (Array.isArray(response.topics)) {
+        setSelectedTopics([...response.topics])
+        if (response.topics.length === topics.length) {
+          setTopicsMode('all')
+        } else {
+          setTopicsMode('custom')
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unable to generate questions')
@@ -107,7 +189,7 @@ function App() {
     try {
       const blob = await downloadPdf({
         questions,
-        title: `${subject || 'Practice'} Paper (${totalQuestions} Questions)`,
+        title: `${subjectName || 'Practice'} Paper (${totalQuestions} Questions)`
       })
       const url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
@@ -141,8 +223,13 @@ function App() {
             <label className="field">
               <span>Subject</span>
               <select
-                value={subject}
-                onChange={(event) => setSubject(event.target.value)}
+                value={subjectId}
+                onChange={(event) => {
+                  const nextId = event.target.value
+                  setSubjectId(nextId)
+                  const match = subjects.find((option) => option.id === nextId)
+                  setSubjectName(match ? match.name : '')
+                }}
                 disabled={subjectsLoading || loading || subjects.length === 0}
                 required
               >
@@ -151,14 +238,77 @@ function App() {
                     {subjectsLoading ? 'Loading subjects…' : 'No subjects available'}
                   </option>
                 ) : (
-                  subjects.map((subjectName) => (
-                    <option key={subjectName} value={subjectName}>
-                      {subjectName}
+                  subjects.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.name}
                     </option>
                   ))
                 )}
               </select>
             </label>
+            <fieldset className="field fieldset">
+              <legend>Topics</legend>
+              {topicsLoading ? (
+                <div className="hint">Loading topics…</div>
+              ) : topics.length === 0 ? (
+                <div className="hint">No topics found for this subject yet.</div>
+              ) : (
+                <>
+                  <label className="option">
+                    <input
+                      type="radio"
+                      name="topics-mode"
+                      value="all"
+                      checked={topicsMode === 'all'}
+                      onChange={() => {
+                        setTopicsMode('all')
+                        setSelectedTopics([...topics])
+                      }}
+                    />
+                    <span>All topics ({topics.length})</span>
+                  </label>
+                  <label className="option">
+                    <input
+                      type="radio"
+                      name="topics-mode"
+                      value="custom"
+                      checked={topicsMode === 'custom'}
+                      onChange={() => {
+                        setTopicsMode('custom')
+                        setSelectedTopics([...topics])
+                      }}
+                    />
+                    <span>Choose specific topics</span>
+                  </label>
+                  {topicsMode === 'custom' && (
+                    <div className="topic-grid">
+                      {topics.map((topic) => {
+                        const checked = selectedTopics.includes(topic)
+                        return (
+                          <label key={topic} className="chip">
+                            <input
+                              type="checkbox"
+                              value={topic}
+                              checked={checked}
+                              onChange={(event) => {
+                                const { checked: isChecked } = event.target
+                                setSelectedTopics((prev) => {
+                                  if (isChecked) {
+                                    return prev.includes(topic) ? prev : [...prev, topic]
+                                  }
+                                  return prev.filter((value) => value !== topic)
+                                })
+                              }}
+                            />
+                            <span>{topic}</span>
+                          </label>
+                        )
+                      })}
+                    </div>
+                  )}
+                </>
+              )}
+            </fieldset>
             <label className="field">
               <span>Total questions</span>
               <input
@@ -184,6 +334,13 @@ function App() {
               {loading ? 'Generating…' : 'Generate questions'}
             </button>
           </form>
+
+          {subjectName && (
+            <div className="selection-summary">
+              <span className="summary-title">{subjectName}</span>
+              <span className="summary-meta">{topicSummary}</span>
+            </div>
+          )}
 
           {distributionItems.length > 0 && (
             <div className="summary-grid">

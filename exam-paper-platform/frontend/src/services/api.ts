@@ -2,6 +2,7 @@ import type {
   GenerateExamPayload,
   GenerateExamResponse,
   Question,
+  TopicListResponse,
   SubjectListResponse,
   VerifyResponse,
 } from '../types'
@@ -32,6 +33,11 @@ export async function generateExam(payload: GenerateExamPayload): Promise<Genera
 export async function fetchSubjects(): Promise<SubjectListResponse> {
   const response = await fetch(`${API_BASE_URL}/exams/subjects`)
   return handleResponse<SubjectListResponse>(response)
+}
+
+export async function fetchTopics(subjectId: string): Promise<TopicListResponse> {
+  const response = await fetch(`${API_BASE_URL}/exams/subjects/${encodeURIComponent(subjectId)}/topics`)
+  return handleResponse<TopicListResponse>(response)
 }
 
 export async function verifyQuestions(questions: Question[]): Promise<VerifyResponse> {

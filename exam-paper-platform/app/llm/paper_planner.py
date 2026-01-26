@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Dict
+from typing import Dict, List, Optional
 
 @dataclass
 class BlueprintItem:
@@ -13,12 +13,14 @@ class PaperBlueprint:
     distribution: Dict[str, int]
     questions: List[BlueprintItem]
     subject: str
+    subject_label: str
+    topics: List[str]
 
 
 from app.graph.queries import (
     get_high_frequency_concepts,
     get_never_asked_concepts,
-    get_recency_gap_concepts
+    get_recency_gap_concepts,
 )
 import random
 
@@ -26,7 +28,10 @@ import random
 def build_paper_blueprint(
     total_questions: int = 65,
     cutoff_year: int = 2019,
-    subject: str | None = None
+    subject: str | None = None,
+    subject_label: Optional[str] = None,
+    topics: Optional[List[str]] = None,
+    topics_selected: Optional[List[str]] = None,
 ):
     blueprint = []
 
@@ -40,9 +45,9 @@ def build_paper_blueprint(
     # -----------------------------
     # Retrieve concepts
     # -----------------------------
-    high_freq = get_high_frequency_concepts(hf_count, subject=subject)
-    recency_gap = get_recency_gap_concepts(cutoff_year, rg_count, subject=subject)
-    never_asked = get_never_asked_concepts(na_count, subject=subject)
+    high_freq = get_high_frequency_concepts(hf_count, subject=subject, topics=topics)
+    recency_gap = get_recency_gap_concepts(cutoff_year, rg_count, subject=subject, topics=topics)
+    never_asked = get_never_asked_concepts(na_count, subject=subject, topics=topics)
 
     # -----------------------------
     # Assign difficulty
@@ -93,5 +98,7 @@ def build_paper_blueprint(
             "never_asked": na_count
         },
         questions=blueprint,
-        subject=subject or ""
+        subject=subject or "",
+        subject_label=subject_label or (subject or ""),
+        topics=topics_selected or (topics or []),
     )

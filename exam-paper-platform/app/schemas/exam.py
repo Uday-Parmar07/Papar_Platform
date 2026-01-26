@@ -1,12 +1,13 @@
-from typing import List, Dict
+from typing import Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
 
 class GenerateExamRequest(BaseModel):
-	subject: str = Field(min_length=1, description="Subject name to generate questions for")
+	subject: str = Field(min_length=1, description="Subject identifier to generate questions for")
 	total_questions: int = Field(ge=1, le=120, description="Number of questions to generate")
 	cutoff_year: int = Field(ge=2000, description="Do not include questions asked after this year")
+	topics: Optional[List[str]] = Field(default=None, description="Optional subset of topics to focus on")
 
 
 class Question(BaseModel):
@@ -19,7 +20,9 @@ class GenerateExamResponse(BaseModel):
 	total_questions: int
 	distribution: Dict[str, int]
 	questions: List[Question]
-	subject: str
+	subject_id: str
+	subject_name: str
+	topics: List[str]
 
 
 class VerifyQuestionsRequest(BaseModel):
@@ -56,5 +59,14 @@ class PdfRequest(BaseModel):
 		return value
 
 
+class SubjectInfo(BaseModel):
+	id: str
+	name: str
+
+
 class SubjectListResponse(BaseModel):
-	subjects: List[str]
+	subjects: List[SubjectInfo]
+
+
+class TopicListResponse(BaseModel):
+	topics: List[str]
