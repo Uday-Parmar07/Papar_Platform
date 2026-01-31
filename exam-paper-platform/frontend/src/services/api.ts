@@ -1,6 +1,7 @@
 import type {
   GenerateExamPayload,
   GenerateExamResponse,
+  GenerateAnswersResponse,
   Question,
   TopicListResponse,
   SubjectListResponse,
@@ -65,4 +66,22 @@ export async function downloadPdf(payload: { questions: Question[]; title: strin
   }
 
   return response.blob()
+}
+
+export async function generateAnswers(payload: {
+  questions: Question[]
+  namespace?: string
+}): Promise<GenerateAnswersResponse> {
+  const body: Record<string, unknown> = { questions: payload.questions }
+  if (payload.namespace && payload.namespace.trim().length > 0) {
+    body.namespace = payload.namespace
+  }
+
+  const response = await fetch(`${API_BASE_URL}/exams/answers`, {
+    method: 'POST',
+    headers: jsonHeaders,
+    body: JSON.stringify(body),
+  })
+
+  return handleResponse<GenerateAnswersResponse>(response)
 }

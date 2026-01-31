@@ -157,3 +157,34 @@ class PineconeVectorStore:
 		for start in range(0, len(items), batch_size):
 			chunk = items[start : start + batch_size]
 			self.index.upsert(vectors=chunk, namespace=namespace)
+
+	def query(
+		self,
+		vector: List[float],
+		top_k: int = 5,
+		namespace: str = "Electrical Engineering",
+		include_metadata: bool = True,
+	) -> Dict:
+		"""
+		Query the index for similar vectors.
+		
+		Args:
+			vector: Query vector (embedding)
+			top_k: Number of top results to return
+			namespace: Pinecone namespace to search in
+			include_metadata: Whether to include metadata in results
+			
+		Returns:
+			Dictionary with 'matches' containing similar vectors and metadata
+		"""
+		try:
+			results = self.index.query(
+				vector=vector,
+				top_k=top_k,
+				namespace=namespace,
+				include_metadata=include_metadata,
+			)
+			return results if results else {"matches": []}
+		except Exception as e:
+			print(f"Error querying index: {e}")
+			return {"matches": []}

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import StreamingResponse
 
+from app.schemas.answer import GenerateAnswersRequest, GenerateAnswersResponse
 from app.schemas.exam import (
 	GenerateExamRequest,
 	GenerateExamResponse,
@@ -12,6 +13,7 @@ from app.schemas.exam import (
 )
 from app.services.exam_service import generate_exam
 from app.services.pdf_service import render_questions_pdf
+from app.services.answer_service import generate_answers as generate_answers_batch
 from app.llm.nodes.validate import validate_question
 from app.graph.queries import list_subjects as graph_list_subjects
 from app.graph.queries import list_topics_for_subject, resolve_subject_label
@@ -72,6 +74,20 @@ def verify_questions(payload: VerifyQuestionsRequest) -> VerifyQuestionsResponse
 		valid=len(valid_questions),
 		invalid=len(validation_results) - len(valid_questions),
 		results=validation_results,
+	)
+
+
+@router.post("/answers", response_model=GenerateAnswersResponse)
+def generate_answers(payload: GenerateAnswersRequest) -> GenerateAnswersResponse:
+	try:
+		answers = generate_answers_batch(payload.questions, namespace=payload.namespace)
+	except RuntimeError as exc:
+		raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+	return GenerateAnswersResponse(
+		total=len(answers),
+		namespace=payload.namespace,
+		answers=answers,
 	)
 
 

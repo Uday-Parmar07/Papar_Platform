@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import { QuestionTable } from './components/QuestionTable'
-import { downloadPdf, fetchSubjects, fetchTopics, generateExam, verifyQuestions } from './services/api'
-import type { Question, SubjectOption, VerifyResult } from './types'
+import { downloadPdf, fetchSubjects, fetchTopics, generateAnswers, generateExam, verifyQuestions } from './services/api'
+import type { AnswerResult, Question, SubjectOption, VerifyResult } from './types'
 
 function App() {
   const [totalQuestions, setTotalQuestions] = useState(20)
@@ -23,6 +23,8 @@ function App() {
   const [pdfLoading, setPdfLoading] = useState(false)
   const [verification, setVerification] = useState<VerifyResult[] | undefined>(undefined)
   const [verificationSummary, setVerificationSummary] = useState<{ valid: number; invalid: number } | null>(null)
+  const [answerLoading, setAnswerLoading] = useState(false)
+  const [answers, setAnswers] = useState<AnswerResult[]>([])
 
   const hasQuestions = questions.length > 0
   const distributionItems = useMemo(() => {
@@ -116,6 +118,7 @@ function App() {
     setError(null)
     setVerification(undefined)
     setVerificationSummary(null)
+    setAnswers([])
 
     if (!subjectId) {
       setError('Please select a subject before generating questions')
@@ -179,6 +182,22 @@ function App() {
       setError(err instanceof Error ? err.message : 'Verification failed')
     } finally {
       setVerifyLoading(false)
+    }
+  }
+
+  const handleGenerateAnswers = async () => {
+    if (questions.length === 0) return
+    setAnswerLoading(true)
+    setError(null)
+
+    try {
+      const namespace = subjectName?.trim().length ? subjectName : 'Electrical Engineering'
+      const response = await generateAnswers({ questions, namespace })
+      setAnswers(response.answers)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Unable to generate answers')
+    } finally {
+      setAnswerLoading(false)
     }
   }
 
@@ -364,6 +383,9 @@ function App() {
             </div>
             <div className="toolbar">
               <div className="toolbar-actions">
+                <button onClick={handleGenerateAnswers} className="secondary" disabled={answerLoading}>
+                  {answerLoading ? 'Generating answers…' : 'Generate answers'}
+                </button>
                 <button onClick={handleVerify} className="secondary" disabled={verifyLoading}>
                   {verifyLoading ? 'Checking…' : 'Run quick verification'}
                 </button>
@@ -379,7 +401,7 @@ function App() {
               )}
             </div>
 
-            <QuestionTable questions={questions} verification={verification} />
+            <QuestionTable questions={questions} verification={verification} answers={answers} />
           </section>
         )}
       </main>

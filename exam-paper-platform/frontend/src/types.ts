@@ -4,6 +4,14 @@ export interface Question {
   question: string
 }
 
+export interface AnswerResult {
+  concept: string
+  difficulty: string
+  question: string
+  answer: string
+  context_retrieved: boolean
+}
+
 export interface GenerateExamPayload {
   subject: string
   total_questions: number
@@ -30,6 +38,12 @@ export interface VerifyResponse {
   valid: number
   invalid: number
   results: VerifyResult[]
+}
+
+export interface GenerateAnswersResponse {
+  total: number
+  namespace: string
+  answers: AnswerResult[]
 }
 
 export interface SubjectOption {
