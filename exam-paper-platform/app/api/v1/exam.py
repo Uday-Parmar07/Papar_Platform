@@ -80,13 +80,28 @@ def verify_questions(payload: VerifyQuestionsRequest) -> VerifyQuestionsResponse
 @router.post("/answers", response_model=GenerateAnswersResponse)
 def generate_answers(payload: GenerateAnswersRequest) -> GenerateAnswersResponse:
 	try:
-		answers = generate_answers_batch(payload.questions, namespace=payload.namespace)
+		answers = generate_answers_batch(
+			payload.questions, 
+			namespace=payload.namespace,
+			subject=payload.subject
+		)
+		# Determine the actual namespace used
+		if payload.namespace:
+			used_namespace = payload.namespace
+		elif payload.subject:
+			# Import here to avoid circular dependency
+			from app.services.answer_service import SUBJECT_NAMESPACE_MAP
+			used_namespace = SUBJECT_NAMESPACE_MAP.get(payload.subject, "Electrical Engineering")
+		else:
+			used_namespace = "Electrical Engineering"
+	except ValueError as exc:
+		raise HTTPException(status_code=400, detail=str(exc)) from exc
 	except RuntimeError as exc:
 		raise HTTPException(status_code=500, detail=str(exc)) from exc
 
 	return GenerateAnswersResponse(
 		total=len(answers),
-		namespace=payload.namespace,
+		namespace=used_namespace,
 		answers=answers,
 	)
 

@@ -1,4 +1,5 @@
 import type { AnswerResult, Question, VerifyResult } from '../types'
+import { MarkdownAnswer } from './MarkdownAnswer'
 
 interface Props {
   questions: Question[]
@@ -33,7 +34,7 @@ export function QuestionTable({ questions, verification, answers }: Props) {
             {answer && (
               <div className="answer-block">
                 <span className="answer-label">Answer</span>
-                <p className="answer-text">{answer.answer}</p>
+                <MarkdownAnswer content={answer.answer} />
                 <div className="answer-foot">
                   <span className={answer.context_retrieved ? 'badge success' : 'badge neutral'}>
                     {answer.context_retrieved ? 'Context applied' : 'Generated without context'}

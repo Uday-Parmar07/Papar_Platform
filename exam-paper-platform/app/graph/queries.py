@@ -1,4 +1,7 @@
+import json
+import random
 import sys
+from functools import lru_cache
 from pathlib import Path
 from typing import Iterable, List, Optional
 
@@ -56,6 +59,77 @@ def _unique_ordered(values: Iterable[str]) -> List[str]:
     return ordered
 
 
+@lru_cache()
+def _syllabus_index() -> dict[str, dict]:
+    syllabus_dir = Path(__file__).resolve().parents[2] / "json_syllabus"
+    index: dict[str, dict] = {}
+    if not syllabus_dir.exists():
+        return index
+
+    for path in syllabus_dir.glob("*.json"):
+        try:
+            with path.open("r", encoding="utf-8") as handle:
+                payload = json.load(handle)
+        except Exception:
+            continue
+
+        subject_id = payload.get("subject")
+        if subject_id:
+            index[subject_id] = payload
+
+    return index
+
+
+def _resolve_candidate_subjects(subject: str) -> List[str]:
+    candidates = [subject]
+    for subject_id, label in SUBJECT_LABELS.items():
+        if subject_id == subject or label == subject:
+            candidates.append(subject_id)
+    return _unique_ordered(candidates)
+
+
+def _topics_from_syllabus(subject: str) -> List[str]:
+    syllabus = _syllabus_index().get(subject)
+    if not syllabus:
+        return []
+
+    topics = [
+        item.get("name")
+        for item in syllabus.get("topics", [])
+        if isinstance(item, dict) and item.get("name")
+    ]
+    return _unique_ordered(topics)
+
+
+def _concepts_from_syllabus(subject: str, topics: Optional[List[str]] = None) -> List[str]:
+    syllabus = _syllabus_index().get(subject)
+    if not syllabus:
+        return []
+
+    normalized_topics = set(topics or [])
+    concepts: List[str] = []
+
+    for topic in syllabus.get("topics", []):
+        if not isinstance(topic, dict):
+            continue
+        topic_name = topic.get("name")
+        if normalized_topics and topic_name not in normalized_topics:
+            continue
+
+        for subtopic in topic.get("subtopics", []):
+            if not isinstance(subtopic, dict):
+                continue
+            for concept in subtopic.get("concepts", []):
+                if isinstance(concept, dict):
+                    name = concept.get("name")
+                else:
+                    name = concept
+                if name:
+                    concepts.append(name)
+
+    return _unique_ordered(concepts)
+
+
 def list_subjects() -> List[dict]:
     query = """
     MATCH (s:Subject)
@@ -79,6 +153,17 @@ def list_subjects() -> List[dict]:
         for display, (subject_id, _) in preferred.items()
     ]
 
+    existing_ids = {item["id"] for item in subjects}
+    for subject_id, label in SUBJECT_LABELS.items():
+        if subject_id not in existing_ids:
+            subjects.append({"id": subject_id, "name": label})
+            existing_ids.add(subject_id)
+
+    for subject_id in _syllabus_index().keys():
+        if subject_id not in existing_ids:
+            subjects.append({"id": subject_id, "name": resolve_subject_label(subject_id)})
+            existing_ids.add(subject_id)
+
     subjects.sort(key=lambda item: item["name"].lower())
     return subjects
 
@@ -90,7 +175,16 @@ def list_topics_for_subject(subject: str) -> List[str]:
     ORDER BY name
     """
     results, _ = db.cypher_query(query, {"subject": subject})
-    return [row[0] for row in results]
+    topics = [row[0] for row in results]
+    if topics:
+        return topics
+
+    for candidate in _resolve_candidate_subjects(subject):
+        fallback_topics = _topics_from_syllabus(candidate)
+        if fallback_topics:
+            return fallback_topics
+
+    return []
 
 
 def _apply_topic_condition(topics: Optional[List[str]]) -> str:
@@ -122,7 +216,24 @@ def _concept_fallback(subject: str | None, topics: Optional[List[str]], limit: i
         params = {"limit": limit}
 
     fallback, _ = db.cypher_query(query, params)
-    return [row[0] for row in fallback]
+    candidates = [row[0] for row in fallback]
+    if candidates:
+        return candidates
+
+    syllabus_subjects: List[str]
+    if subject:
+        syllabus_subjects = _resolve_candidate_subjects(subject)
+    else:
+        syllabus_subjects = list(_syllabus_index().keys())
+
+    for candidate in syllabus_subjects:
+        concepts = _concepts_from_syllabus(candidate, topics)
+        if concepts:
+            if limit and len(concepts) > limit:
+                concepts = random.sample(concepts, k=limit)
+            return concepts
+
+    return []
 
 # -----------------------------
 # GRAPH RAG RETRIEVAL QUERIES

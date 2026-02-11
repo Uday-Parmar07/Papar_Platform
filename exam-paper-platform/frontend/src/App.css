@@ -361,7 +361,52 @@ button:not(:disabled):active {
 .answer-text {
   margin: 0;
   color: #1f2937;
+  line-height: 1.65;
+  font-size: 0.95rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.answer-text p {
+  margin: 0;
+}
+
+.answer-text h2,
+.answer-text h3,
+.answer-text h4 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.answer-text strong {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.answer-text ol,
+.answer-text ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.answer-text li {
   line-height: 1.6;
+}
+
+.answer-text code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  background: #f3f4f6;
+  padding: 0.1rem 0.3rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.answer-text .katex-display {
+  margin: 0.75rem 0;
 }
 
 .answer-foot {

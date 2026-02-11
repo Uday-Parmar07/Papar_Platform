@@ -14,6 +14,21 @@ DEFAULT_TOP_K = int(os.getenv("ANSWER_TOP_K", "5"))
 MAX_CONTEXT_CHARS = int(os.getenv("ANSWER_MAX_CONTEXT_CHARS", "4000"))
 DEFAULT_MODEL = os.getenv("GROQ_MODEL_NAME", "llama-3.3-70b-versatile")
 
+# Subject ID to Pinecone namespace mapping
+SUBJECT_NAMESPACE_MAP = {
+    "CE 2026": "Civil Engineering",
+    "CH 2026": "Chemical Engineering",
+    "CS 2026": "Computer Science Engineering",
+    "EC 2026": "Electronics and Communication Engineering",
+    "EE 2026": "Electrical Engineering",
+    "Electrical Engineering": "Electrical Engineering",
+    "ME 2026": "Mechanical Engineering",
+    "MT 2026": "Metallurgical Engineering",
+}
+
+# Subjects with answer generation support (RAG embeddings available)
+ANSWER_ENABLED_SUBJECTS = {"EE 2026", "Electrical Engineering"}
+
 
 @lru_cache()
 def _groq_client() -> Groq:
@@ -85,7 +100,7 @@ def _retrieve_context(question_text: str, namespace: str, top_k: int) -> str:
 		return ""
 
 
-def _build_prompt(question: Question, context: str) -> str:
+def _build_prompt(question: Question, context: str, subject_name: str = "Electrical Engineering") -> str:
 	difficulty_guidance = {
 		"Easy": "Provide a clear, concise answer with basic explanation.",
 		"Medium": "Provide a detailed answer with step-by-step working if applicable.",
@@ -97,24 +112,24 @@ def _build_prompt(question: Question, context: str) -> str:
 	context_block = context if context else "NOTE: No context available from knowledge base."
 
 	return (
-		"You are an expert Electrical Engineering tutor preparing answers for GATE exam questions.\n\n"
+		f"You are an expert {subject_name} tutor preparing answers for GATE exam questions.\n\n"
 		f"QUESTION:\n{question.question}\n\n"
 		f"CONCEPT: {question.concept}\n"
 		f"DIFFICULTY LEVEL: {question.difficulty}\n\n"
 		"INSTRUCTIONS:\n"
 		f"1. {guidance}\n"
-		"2. Use the retrieved context below to support your answer.\n"
-		"3. Show all calculations and reasoning.\n"
-		"4. If numerical, include units and final boxed answer.\n"
-		"5. Keep answer focused and exam-appropriate.\n\n"
+		"2. Present the solution in Markdown using numbered **Step X:** subsections that mirror the logical phases of the solution.\n"
+		"3. Typeset every equation or calculation in LaTeX (use `$...$` inline and `$$...$$` for multi-line).\n"
+		"4. If numerical, include units and finish with a **Final Answer** subsection containing a boxed result using `$\\boxed{...}$`.\n"
+		"5. Use the retrieved context below only when it strengthens the reasoning, and keep the response exam-appropriate and concise.\n\n"
 		f"{context_block}\n\n"
 		"ANSWER:"
 	)
 
 
-def _generate_answer(question: Question, namespace: str, model: str) -> AnswerItem:
+def _generate_answer(question: Question, namespace: str, model: str, subject_name: str = "Electrical Engineering") -> AnswerItem:
 	context = _retrieve_context(question.question, namespace, DEFAULT_TOP_K)
-	prompt = _build_prompt(question, context)
+	prompt = _build_prompt(question, context, subject_name)
 
 	client = _groq_client()
 
@@ -144,17 +159,55 @@ def _generate_answer(question: Question, namespace: str, model: str) -> AnswerIt
 	)
 
 
-def generate_answers(questions: List[Question], namespace: str | None = None, model: str | None = None) -> List[AnswerItem]:
+def generate_answers(
+	questions: List[Question], 
+	namespace: str | None = None, 
+	model: str | None = None,
+	subject: str | None = None
+) -> List[AnswerItem]:
+	"""Generate answers for questions.
+	
+	Args:
+		questions: List of Question objects
+		namespace: Pinecone namespace (auto-mapped from subject if not provided)
+		model: LLM model name
+		subject: Subject ID (e.g., 'EE 2026') - used to validate answer generation support
+		
+	Returns:
+		List of AnswerItem objects
+		
+	Raises:
+		ValueError: If subject doesn't support answer generation
+	"""
 	if not questions:
 		return []
 
-	target_namespace = namespace.strip() if isinstance(namespace, str) else None
-	if not target_namespace:
-		target_namespace = DEFAULT_NAMESPACE
+	# Validate subject supports answer generation
+	if subject and subject not in ANSWER_ENABLED_SUBJECTS:
+		subject_name = SUBJECT_NAMESPACE_MAP.get(subject, subject)
+		raise ValueError(
+			f"Answer generation is currently only supported for Electrical Engineering. "
+			f"Subject '{subject_name}' does not have RAG embeddings available yet."
+		)
+
+	# Determine namespace
+	if namespace:
+		target_namespace = namespace.strip()
+	else:
+		# Auto-map from subject if provided
+		if subject:
+			target_namespace = SUBJECT_NAMESPACE_MAP.get(subject, DEFAULT_NAMESPACE)
+		else:
+			target_namespace = DEFAULT_NAMESPACE
+
+	# Determine subject name for prompt
+	subject_name = SUBJECT_NAMESPACE_MAP.get(subject, None) if subject else None
+	if not subject_name:
+		subject_name = target_namespace
 
 	target_model = (model or DEFAULT_MODEL).strip() or DEFAULT_MODEL
 
 	results: List[AnswerItem] = []
 	for question in questions:
-		results.append(_generate_answer(question, target_namespace, target_model))
+		results.append(_generate_answer(question, target_namespace, target_model, subject_name))
 	return results

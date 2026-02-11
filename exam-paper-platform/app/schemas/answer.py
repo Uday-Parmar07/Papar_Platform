@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -7,11 +7,14 @@ from app.schemas.exam import Question
 
 class GenerateAnswersRequest(BaseModel):
     questions: List[Question] = Field(..., min_length=1, description="Questions requiring answers")
-    namespace: str = Field(default="Electrical Engineering", description="Pinecone namespace for retrieval")
+    namespace: Optional[str] = Field(default=None, description="Pinecone namespace for retrieval (auto-detected from subject if not provided)")
+    subject: Optional[str] = Field(default=None, description="Subject ID (e.g., 'EE 2026') for validation and namespace mapping")
 
     @field_validator("namespace")
-    def normalize_namespace(cls, value: str) -> str:
-        return value.strip() or "Electrical Engineering"
+    def normalize_namespace(cls, value: str | None) -> str | None:
+        if value:
+            return value.strip() or None
+        return None
 
 
 class AnswerItem(BaseModel):

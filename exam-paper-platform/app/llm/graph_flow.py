@@ -5,7 +5,9 @@ from app.llm.paper_planner import build_paper_blueprint
 from app.graph.queries import (
     get_high_frequency_concepts,
     get_never_asked_concepts,
-    get_recency_gap_concepts
+    get_recency_gap_concepts,
+    list_subjects,
+    list_topics_for_subject
 )
 
 # -----------------------------
@@ -19,6 +21,10 @@ class PaperState(TypedDict):
     subject_label: Optional[str]
     topics: Optional[List[str]]
     topics_selected: Optional[List[str]]
+    
+    # Metadata
+    available_subjects: Optional[List[dict]]
+    available_topics: Optional[List[str]]
 
     blueprint: dict
     questions: List[dict]
@@ -28,29 +34,67 @@ class PaperState(TypedDict):
     retry_count: int
 
 # -----------------------------
-# NODE 1: GRAPH RAG RETRIEVAL
+# NODE 1: FETCH SUBJECTS AND TOPICS
+# -----------------------------
+
+def fetch_subjects_node(state: PaperState):
+    """Fetch available subjects from graph."""
+    try:
+        subjects = list_subjects()
+        return {"available_subjects": subjects}
+    except Exception as e:
+        print(f"Failed to fetch subjects: {e}")
+        return {"available_subjects": []}
+
+
+def fetch_topics_node(state: PaperState):
+    """Fetch available topics for the selected subject."""
+    subject = state.get("subject")
+    if not subject:
+        return {"available_topics": []}
+    
+    try:
+        topics = list_topics_for_subject(subject)
+        return {"available_topics": topics}
+    except Exception as e:
+        print(f"Failed to fetch topics for {subject}: {e}")
+        return {"available_topics": []}
+
+# NODE 2: GRAPH RAG RETRIEVAL
 # -----------------------------
 
 def retrieve_concepts(state: PaperState):
-    topics = state.get("topics")
-    return {
-        "high_frequency": get_high_frequency_concepts(
-            limit=int(state["total_questions"] * 0.5),
-            subject=state.get("subject"),
-            topics=topics,
-        ),
-        "recency_gap": get_recency_gap_concepts(
-            cutoff_year=state["cutoff_year"],
-            limit=int(state["total_questions"] * 0.3),
-            subject=state.get("subject"),
-            topics=topics,
-        ),
-        "never_asked": get_never_asked_concepts(
-            limit=int(state["total_questions"] * 0.2),
-            subject=state.get("subject"),
-            topics=topics,
-        )
-    }
+    """Retrieve concepts using graph RAG queries."""
+    try:
+        topics = state.get("topics")
+        subject = state.get("subject")
+        
+        results = {
+            "high_frequency": get_high_frequency_concepts(
+                limit=int(state["total_questions"] * 0.5),
+                subject=subject,
+                topics=topics,
+            ),
+            "recency_gap": get_recency_gap_concepts(
+                cutoff_year=state["cutoff_year"],
+                limit=int(state["total_questions"] * 0.3),
+                subject=subject,
+                topics=topics,
+            ),
+            "never_asked": get_never_asked_concepts(
+                limit=int(state["total_questions"] * 0.2),
+                subject=subject,
+                topics=topics,
+            )
+        }
+        return results
+    except Exception as e:
+        print(f"Failed to retrieve concepts: {e}")
+        return {
+            "high_frequency": [],
+            "recency_gap": [],
+            "never_asked": []
+        }
 
 # -----------------------------
 # NODE 2: BUILD BLUEPRINT
@@ -169,6 +213,8 @@ def finalize_paper(state: PaperState):
 def build_graph():
     graph = StateGraph(PaperState)
 
+    graph.add_node("fetch_subjects", fetch_subjects_node)
+    graph.add_node("fetch_topics", fetch_topics_node)
     graph.add_node("retrieve_concepts", retrieve_concepts)
     graph.add_node("build_blueprint", build_blueprint_node)
     graph.add_node("generate_questions", generate_questions_node)
@@ -176,8 +222,10 @@ def build_graph():
     graph.add_node("regenerate_failed_questions", regenerate_failed_questions)
     graph.add_node("finalize_paper", finalize_paper)
 
-    graph.set_entry_point("retrieve_concepts")
+    graph.set_entry_point("fetch_subjects")
 
+    graph.add_edge("fetch_subjects", "fetch_topics")
+    graph.add_edge("fetch_topics", "retrieve_concepts")
     graph.add_edge("retrieve_concepts", "build_blueprint")
     graph.add_edge("build_blueprint", "generate_questions")
     graph.add_edge("generate_questions", "validate_questions")

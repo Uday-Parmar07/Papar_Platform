@@ -3,8 +3,8 @@
 Integration script: Generate exam questions and answers together.
 
 This script demonstrates the complete workflow:
-1. Generate exam questions using the exam service
-2. Generate answers using the RAG system
+1. Generate exam questions using the exam service (supports all subjects)
+2. Generate answers using the RAG system (currently EE only)
 3. Combine them into a complete exam paper with solutions
 """
 
@@ -17,25 +17,29 @@ from typing import List, Dict
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from app.services.exam_service import generate_exam
+from app.services.answer_service import generate_answers, ANSWER_ENABLED_SUBJECTS, SUBJECT_NAMESPACE_MAP
+from app.schemas.exam import Question
 from scripts.generate_answers import generate_answer
 
 
 def generate_complete_exam(
     total_questions: int = 5,
     cutoff_year: int = 2023,
-    subject: str = "EE",
+    subject: str = "EE 2026",
     topics: List[str] | None = None,
-    output_dir: Path = Path("exam_output")
+    output_dir: Path = Path("exam_output"),
+    skip_answers: bool = False
 ) -> Dict:
     """
-    Generate a complete exam paper with questions and answers.
+    Generate a complete exam paper with questions and optionally answers.
     
     Args:
         total_questions: Number of questions to generate
         cutoff_year: Don't include questions asked after this year
-        subject: Subject ID (e.g., "EE", "CS")
+        subject: Subject ID (e.g., "EE 2026", "CS 2026")
         topics: Optional list of specific topics
         output_dir: Directory to save output files
+        skip_answers: Skip answer generation (questions only)
         
     Returns:
         Dictionary with exam details and results
@@ -45,11 +49,11 @@ def generate_complete_exam(
     output_dir.mkdir(parents=True, exist_ok=True)
     
     print("=" * 70)
-    print("GENERATING COMPLETE EXAM WITH ANSWERS")
+    print("GENERATING EXAM QUESTIONS" + (" WITH ANSWERS" if not skip_answers else ""))
     print("=" * 70)
     
     # Step 1: Generate questions
-    print(f"\n[STEP 1] Generating {total_questions} exam questions...")
+    print(f"\n[STEP 1] Generating {total_questions} exam questions for {subject}...")
     try:
         exam_result = generate_exam(
             total_questions=total_questions,
@@ -63,6 +67,14 @@ def generate_complete_exam(
     except Exception as e:
         print(f"✗ Failed to generate questions: {e}")
         return {"status": "failed", "error": str(e)}
+    
+    # Check if answers can be generated
+    can_generate_answers = exam_result.subject_id in ANSWER_ENABLED_SUBJECTS
+    if not skip_answers and not can_generate_answers:
+        print(f"\n⚠ NOTE: Answer generation is currently only supported for Electrical Engineering.")
+        print(f"  Subject '{exam_result.subject_name}' does not have RAG embeddings available yet.")
+        print(f"  Proceeding with question generation only.")
+        skip_answers = True
     
     # Step 2: Save questions
     print(f"\n[STEP 2] Saving questions...")
@@ -85,32 +97,63 @@ def generate_complete_exam(
         }, f, indent=2)
     print(f"✓ Questions saved to: {questions_file}")
     
-    # Step 3: Generate answers
+    # Step 3: Generate answers (if enabled)
+    if skip_answers:
+        print(f"\n⚠ Skipping answer generation.")
+        print(f"\n" + "=" * 70)
+        print("SUMMARY")
+        print("=" * 70)
+        print(f"Subject: {exam_result.subject_name}")
+        print(f"Total Questions Generated: {exam_result.total_questions}")
+        print(f"Output Directory: {output_dir.resolve()}")
+        print(f"\nGenerated Files:")
+        print(f"  - questions.json (questions only)")
+        print("=" * 70)
+        
+        return {
+            "status": "success",
+            "subject": exam_result.subject_name,
+            "total_questions": exam_result.total_questions,
+            "answers_generated": False,
+            "output_dir": str(output_dir.resolve()),
+            "files": {
+                "questions": str(questions_file)
+            }
+        }
+    
     print(f"\n[STEP 3] Generating answers for {total_questions} questions...")
     answers_list = []
     failed_count = 0
     
-    for i, question in enumerate(exam_result.questions, 1):
-        try:
-            print(f"  [{i}/{total_questions}] {question.concept}...", end=" ", flush=True)
-            answer_result = generate_answer(
-                question=question.question,
-                concept=question.concept,
-                difficulty=question.difficulty,
-                namespace=exam_result.subject_name
-            )
-            answers_list.append(answer_result)
-            print("✓")
-        except Exception as e:
-            print(f"✗ ({str(e)[:30]}...)")
+    # Convert to Question objects for the service
+    question_objs = [Question(**q) for q in questions_list]
+    
+    try:
+        answers = generate_answers(
+            question_objs,
+            subject=exam_result.subject_id
+        )
+        for i, (question, answer) in enumerate(zip(exam_result.questions, answers), 1):
+            print(f"  [{i}/{total_questions}] {question.concept}... ✓")
             answers_list.append({
                 "question": question.question,
                 "concept": question.concept,
                 "difficulty": question.difficulty,
-                "answer": f"Error generating answer: {str(e)}",
-                "context_retrieved": False
+                "answer": answer.answer,
+                "context_retrieved": answer.context_retrieved
             })
-            failed_count += 1
+    except Exception as e:
+        print(f"✗ Failed to generate answers: {e}")
+        return {
+            "status": "partially_failed",
+            "subject": exam_result.subject_name,
+            "total_questions": exam_result.total_questions,
+            "error": str(e),
+            "files": {
+                "questions": str(questions_file)
+            }
+        }
+    
     
     # Step 4: Save answers
     print(f"\n[STEP 4] Saving answers...")
@@ -175,6 +218,7 @@ def generate_complete_exam(
         "total_questions": exam_result.total_questions,
         "successfully_answered": len(answers_list) - failed_count,
         "failed": failed_count,
+        "answers_generated": True,
         "output_dir": str(output_dir.resolve()),
         "files": {
             "questions": str(questions_file),
@@ -316,17 +360,28 @@ def generate_from_file(
 if __name__ == "__main__":
     import argparse
     
-    parser = argparse.ArgumentParser(description="Generate complete exam with questions and answers")
+    parser = argparse.ArgumentParser(
+        description="Generate exam questions (all subjects) with optional answers (EE only)"
+    )
     
     subparsers = parser.add_subparsers(dest="command", help="Command to run")
     
     # Generate new exam
-    gen_parser = subparsers.add_parser("generate", help="Generate new exam with questions and answers")
+    gen_parser = subparsers.add_parser("generate", help="Generate new exam with questions and optionally answers")
     gen_parser.add_argument("--total", type=int, default=5, help="Total questions to generate")
     gen_parser.add_argument("--cutoff-year", type=int, default=2023, help="Cutoff year for questions")
-    gen_parser.add_argument("--subject", default="EE", help="Subject ID")
+    gen_parser.add_argument(
+        "--subject", 
+        default="EE 2026", 
+        help="Subject ID (e.g., 'EE 2026', 'CS 2026', 'CE 2026', 'EC 2026', 'ME 2026', 'CH 2026', 'MT 2026')"
+    )
     gen_parser.add_argument("--topics", nargs="+", help="Specific topics to focus on")
     gen_parser.add_argument("--output", type=Path, default=Path("exam_output"), help="Output directory")
+    gen_parser.add_argument(
+        "--skip-answers",
+        action="store_true",
+        help="Skip answer generation (questions only). Automatically enabled for non-EE subjects."
+    )
     
     # Generate from file
     file_parser = subparsers.add_parser("from-file", help="Generate answers for existing questions")
@@ -342,7 +397,8 @@ if __name__ == "__main__":
                 cutoff_year=args.cutoff_year,
                 subject=args.subject,
                 topics=args.topics,
-                output_dir=args.output
+                output_dir=args.output,
+                skip_answers=args.skip_answers
             )
         elif args.command == "from-file":
             result = generate_from_file(
@@ -352,14 +408,20 @@ if __name__ == "__main__":
         else:
             parser.print_help()
             print("\nExample usage:")
-            print("  # Generate new exam with 5 questions:")
-            print("  python scripts/generate_exam_with_answers.py generate --total 5 --subject EE")
+            print("  # Generate questions for Electrical Engineering with answers:")
+            print("  python scripts/generate_exam_with_answers.py generate --total 5 --subject 'EE 2026'")
+            print("\n  # Generate questions for Computer Science (questions only):")
+            print("  python scripts/generate_exam_with_answers.py generate --total 5 --subject 'CS 2026' --skip-answers")
             print("\n  # Generate answers for existing questions:")
             print("  python scripts/generate_exam_with_answers.py from-file questions.json")
+            print("\n  Available subjects: EE 2026, CS 2026, CE 2026, EC 2026, ME 2026, CH 2026, MT 2026")
+            print("  Note: Answer generation currently only supported for EE 2026")
             sys.exit(0)
         
         print("\n✓ Operation completed successfully!")
         
     except Exception as e:
         print(f"\n✗ Error: {e}")
+        import traceback
+        traceback.print_exc()
         sys.exit(1)
