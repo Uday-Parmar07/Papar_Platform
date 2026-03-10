@@ -34,6 +34,20 @@ def build_paper_blueprint(
     topics_selected: Optional[List[str]] = None,
 ):
     blueprint = []
+    seen_concepts = set()
+    def append_item(concept_name: str, reason: str):
+        normalized = " ".join((concept_name or "").lower().split())
+        if not normalized or normalized in seen_concepts:
+            return
+        seen_concepts.add(normalized)
+        blueprint.append(
+            BlueprintItem(
+                concept=concept_name,
+                difficulty=assign_difficulty(),
+                reason=reason,
+            )
+        )
+
 
     # -----------------------------
     # Decide counts
@@ -64,31 +78,32 @@ def build_paper_blueprint(
     # Build blueprint items
     # -----------------------------
     for c in high_freq:
-        blueprint.append(
-            BlueprintItem(
-                concept=c["concept"],
-                difficulty=assign_difficulty(),
-                reason="High frequency in PYQs"
-            )
-        )
+        append_item(c["concept"], "High frequency in PYQs")
 
     for c in recency_gap:
-        blueprint.append(
-            BlueprintItem(
-                concept=c["concept"],
-                difficulty=assign_difficulty(),
-                reason="Not asked recently"
-            )
-        )
+        append_item(c["concept"], "Not asked recently")
 
     for c in never_asked:
-        blueprint.append(
-            BlueprintItem(
-                concept=c["concept"],
-                difficulty=assign_difficulty(),
-                reason="Never asked in PYQs"
+        append_item(c["concept"], "Never asked in PYQs")
+
+    # Ensure requested count even after dedupe by allowing controlled repeats at the end.
+    if len(blueprint) < total_questions:
+        combined = high_freq + recency_gap + never_asked
+        for c in combined:
+            if len(blueprint) >= total_questions:
+                break
+            concept_name = c.get("concept")
+            if not concept_name:
+                continue
+            blueprint.append(
+                BlueprintItem(
+                    concept=concept_name,
+                    difficulty=assign_difficulty(),
+                    reason="Supplemental concept to match requested count",
+                )
             )
-        )
+
+    blueprint = blueprint[:total_questions]
 
     return PaperBlueprint(
         total_questions=total_questions,

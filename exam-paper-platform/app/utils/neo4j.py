@@ -1,7 +1,15 @@
 """Shared Neo4j helpers."""
 
 import os
+from pathlib import Path
 from urllib.parse import unquote, urlparse
+
+from dotenv import load_dotenv
+
+
+# Load project-level .env regardless of current working directory.
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+load_dotenv(PROJECT_ROOT / ".env", override=False)
 
 
 def resolve_neo4j_url() -> str:

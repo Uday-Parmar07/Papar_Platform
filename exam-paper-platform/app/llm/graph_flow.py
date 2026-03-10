@@ -28,6 +28,7 @@ class PaperState(TypedDict):
 
     blueprint: dict
     questions: List[dict]
+    retrieved_graph_data: Optional[dict]
     validated_questions: List[dict]
     final_questions: List[dict]
     failed_questions: List[dict]
@@ -87,14 +88,14 @@ def retrieve_concepts(state: PaperState):
                 topics=topics,
             )
         }
-        return results
+        return {"retrieved_graph_data": results}
     except Exception as e:
         print(f"Failed to retrieve concepts: {e}")
-        return {
+        return {"retrieved_graph_data": {
             "high_frequency": [],
             "recency_gap": [],
             "never_asked": []
-        }
+        }}
 
 # -----------------------------
 # NODE 2: BUILD BLUEPRINT
@@ -123,6 +124,7 @@ def generate_questions_node(state: PaperState):
     questions = []
 
     subject_label = state.get("subject_label") or getattr(state.get("blueprint"), "subject_label", "")
+    subject_id = state.get("subject")
     topics_filter = state.get("topics")
 
     for item in state["blueprint"].questions:
@@ -131,6 +133,8 @@ def generate_questions_node(state: PaperState):
             difficulty=item.difficulty,
             subject=subject_label or "",
             topics=topics_filter,
+            existing_questions=questions,
+            subject_id=subject_id,
         )
         questions.append(q)
 
@@ -180,6 +184,7 @@ def regenerate_failed_questions(state: PaperState):
     regenerated = []
 
     subject_label = state.get("subject_label") or getattr(state.get("blueprint"), "subject_label", "")
+    subject_id = state.get("subject")
     topics_filter = state.get("topics")
 
     for q in state["failed_questions"]:
@@ -188,6 +193,7 @@ def regenerate_failed_questions(state: PaperState):
             difficulty=q["difficulty"],
             subject=subject_label or "",
             topics=topics_filter,
+            subject_id=subject_id,
         )
         regenerated.append(new_q)
 

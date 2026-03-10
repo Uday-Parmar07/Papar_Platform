@@ -40,6 +40,7 @@ class Concept(StructuredNode):
 class Question(StructuredNode):
     uid = UniqueIdProperty()
     text = StringProperty(required=True)
+    subject_id = StringProperty(required=False)
     year = IntegerProperty(required=True)
     marks = IntegerProperty(required=True)
     difficulty = StringProperty(

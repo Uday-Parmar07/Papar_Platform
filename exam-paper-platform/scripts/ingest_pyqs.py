@@ -10,7 +10,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 import fitz
-from neomodel import config
+from neomodel import config, db
 
 from app.utils.neo4j import resolve_neo4j_url
 from app.graph.schema import Question, Concept
@@ -28,6 +28,18 @@ except ValueError as exc:
 QUESTION_SPLIT_REGEX = re.compile(r"\nQ\.\s*\d+|\n\d+\.")
 DEFAULT_INPUT_DIR = PROJECT_ROOT / "raw_pyqs"
 
+SUBJECT_CODE_MAP = {
+    "CE": "CE 2026",
+    "CH": "CH 2026",
+    "CS": "CS 2026",
+    "EC": "EC 2026",
+    "EE": "EE 2026",
+    "ME": "ME 2026",
+    "MT": "MT 2026",
+}
+
+_SUBJECT_CONCEPTS_CACHE: dict[str, list[str]] = {}
+
 # -----------------------------
 # HELPERS
 # -----------------------------
@@ -43,12 +55,40 @@ def split_questions(text):
     parts = QUESTION_SPLIT_REGEX.split(text)
     return [p.strip() for p in parts if len(p.strip()) > 50]
 
-def link_concepts(question_text, question_node):
-    concepts = Concept.nodes.all()
+def _infer_subject_from_path(pdf_path: Path) -> str:
+    parts = [part.upper() for part in pdf_path.parts]
+    for idx, part in enumerate(parts):
+        if part == "RAW_PYQS" and idx + 1 < len(parts):
+            code = parts[idx + 1]
+            subject = SUBJECT_CODE_MAP.get(code)
+            if subject:
+                return subject
+    raise ValueError(f"Cannot infer subject code from path: {pdf_path}")
+
+
+def _subject_concept_names(subject_id: str) -> list[str]:
+    if subject_id in _SUBJECT_CONCEPTS_CACHE:
+        return _SUBJECT_CONCEPTS_CACHE[subject_id]
+
+    query = """
+    MATCH (s:Subject {name: $subject})-[:HAS_TOPIC]->(:Topic)-[:HAS_SUBTOPIC]->(:SubTopic)-[:HAS_CONCEPT]->(c:Concept)
+    RETURN DISTINCT c.name AS name
+    """
+    rows, _ = db.cypher_query(query, {"subject": subject_id})
+    names = [row[0] for row in rows if row and row[0]]
+    _SUBJECT_CONCEPTS_CACHE[subject_id] = names
+    return names
+
+
+def link_concepts(question_text, question_node, subject_id: str):
+    concept_names = _subject_concept_names(subject_id)
     lower_text = question_text.lower()
 
-    for concept in concepts:
-        if concept.name.lower() in lower_text:
+    for name in concept_names:
+        if name.lower() in lower_text:
+            concept = Concept.nodes.get_or_none(name=name)
+            if concept is None:
+                continue
             concept.appears_in.connect(question_node)
 
 # -----------------------------
@@ -71,6 +111,11 @@ def ingest_pdf(pdf_path: Path, marks: int, difficulty: str):
 
     text = extract_text(pdf_path)
     questions = split_questions(text)
+    try:
+        subject_id = _infer_subject_from_path(pdf_path)
+    except ValueError as exc:
+        print(f"⚠️  Skipping {pdf_path.name}: {exc}")
+        return
 
     if not questions:
         print(f"⚠️  No questions detected in {pdf_path.name}")
@@ -81,13 +126,14 @@ def ingest_pdf(pdf_path: Path, marks: int, difficulty: str):
     for q_text in questions:
         question = Question(
             text=q_text,
+            subject_id=subject_id,
             year=year,
             marks=marks,
             difficulty=difficulty,
             is_pyq=True
         ).save()
 
-        link_concepts(q_text, question)
+        link_concepts(q_text, question, subject_id)
 
 
 def collect_pdfs(targets: Iterable[Path]) -> List[Path]:

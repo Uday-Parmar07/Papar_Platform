@@ -61,6 +61,25 @@ def appears_multi_question(text: str) -> bool:
         return True
     return False
 
+
+def concept_alignment_ok(text: str, concept: str) -> bool:
+    concept_tokens = [tok for tok in re.split(r"\W+", (concept or "").lower()) if len(tok) >= 4]
+    if not concept_tokens:
+        return True
+    lowered = text.lower()
+    matches = sum(1 for tok in concept_tokens if tok in lowered)
+    return matches >= 1
+
+
+def repetitive_opening(text: str) -> bool:
+    opening = " ".join(text.lower().split()[:4])
+    weak_openings = {
+        "for an electrical engineering",
+        "explain the fundamental principles",
+        "a practical electrical engineering",
+    }
+    return opening in weak_openings
+
 # -----------------------------
 # Core validation
 # -----------------------------
@@ -99,6 +118,14 @@ def validate_question(question: Dict) -> Dict:
     # 5️⃣ Difficulty sanity (heuristic)
     if difficulty not in DIFFICULTY_RULES:
         return {"valid": False, "reason": "Unknown difficulty level"}
+
+    # 6️⃣ Concept clarity check
+    if not concept_alignment_ok(text, question.get("concept", "")):
+        return {"valid": False, "reason": "Question does not clearly test the target concept"}
+
+    # 7️⃣ Language monotony hint
+    if repetitive_opening(text):
+        return {"valid": False, "reason": "Repetitive phrasing detected"}
 
 
     return {"valid": True, "reason": "OK"}
