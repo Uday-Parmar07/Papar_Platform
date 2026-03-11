@@ -797,6 +797,22 @@ def generate_exam(
 			seen_signatures.add(signature)
 			questions.append(candidate)
 
+	# Final hard fallback: ensure the API never returns an empty paper.
+	if not questions:
+		fallback_topics = selected_topics or [subject_label]
+		for idx in range(total_questions):
+			topic = fallback_topics[idx % len(fallback_topics)]
+			questions.append(
+				Question(
+					concept=_normalize_concept(topic, selected_topics),
+					difficulty="Medium",
+					question=(
+						f"For {subject_label}, explain the core principles of {topic}, derive the governing relation, "
+						"and solve one representative exam-level problem with clear assumptions and final result."
+					),
+				)
+			)
+
 	_append_generated_history(
 		[
 			{

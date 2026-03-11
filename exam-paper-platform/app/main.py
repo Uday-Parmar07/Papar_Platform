@@ -3,6 +3,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.v1 import api_router
 from app.core.config import get_settings
+from app.db.base import Base
+from app.db.models import ExplanationCache, GeneratedPaper, User
+from app.db.session import engine
 
 
 def create_app() -> FastAPI:
@@ -19,6 +22,12 @@ def create_app() -> FastAPI:
 	)
 
 	app.include_router(api_router, prefix=settings.api_v1_prefix)
+
+	@app.on_event("startup")
+	def create_tables() -> None:
+		# Import side effects ensure model metadata is registered before create_all.
+		_ = (User, GeneratedPaper, ExplanationCache)
+		Base.metadata.create_all(bind=engine)
 
 	return app
 

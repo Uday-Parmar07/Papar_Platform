@@ -1,6 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
+from sqlalchemy.orm import Session
 
+from app.core.security import get_current_user
+from app.db.models.user import User
+from app.db.session import get_db
 from app.schemas.answer import GenerateAnswersRequest, GenerateAnswersResponse
 from app.schemas.exam import (
 	GenerateExamRequest,
@@ -14,6 +18,7 @@ from app.schemas.exam import (
 from app.services.exam_service import generate_exam
 from app.services.pdf_service import render_questions_pdf
 from app.services.answer_service import generate_answers as generate_answers_batch
+from app.services.paper_service import save_generated_paper
 from app.llm.nodes.validate import validate_question
 from app.graph.queries import list_subjects as graph_list_subjects
 from app.graph.queries import list_topics_for_subject, resolve_subject_label
@@ -23,14 +28,20 @@ router = APIRouter()
 
 
 @router.post("/generate", response_model=GenerateExamResponse)
-def generate_exam_endpoint(payload: GenerateExamRequest) -> GenerateExamResponse:
+def generate_exam_endpoint(
+	payload: GenerateExamRequest,
+	db: Session = Depends(get_db),
+	current_user: User = Depends(get_current_user),
+) -> GenerateExamResponse:
 	try:
-		return generate_exam(
+		result = generate_exam(
 			total_questions=payload.total_questions,
 			cutoff_year=payload.cutoff_year,
 			subject=payload.subject,
 			topics=payload.topics,
 		)
+		save_generated_paper(db, current_user, result)
+		return result
 	except ValueError as exc:
 		raise HTTPException(status_code=400, detail=str(exc)) from exc
 
