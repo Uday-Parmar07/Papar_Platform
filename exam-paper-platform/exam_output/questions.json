@@ -1,0 +1,39 @@
+{
+  "subject": "Electrical Engineering",
+  "subject_id": "EE 2026",
+  "total_questions": 4,
+  "topics": [
+    "Analog and Digital Electronics",
+    "Control Systems",
+    "Electric circuits",
+    "Electrical Machines",
+    "Electrical and Electronic Measurements",
+    "Electromagnetic Fields",
+    "Engineering Mathematics",
+    "Power Electronics",
+    "Power Systems",
+    "Signals and Systems"
+  ],
+  "questions": [
+    {
+      "question": "The three-bus power system shown in the figure has one alternator connected to bus 2 which supplies 200 MW and 40 MVAr power. Bus 3 is infinite bus having a voltage of magnitude V3 =1.0 p.u. and angle of -15 . A variable current source, I is connected at bus 1 and controlled such that the magnitude of the bus 1 voltage...",
+      "concept": "current",
+      "difficulty": "Medium"
+    },
+    {
+      "question": "The single phase rectifier consisting of three thyristors T1, T2, T3 and a diode D1 feed power to a 10 A constant current load. T1 and T3 are fired at = 60 and T2 is fired at = 240 . The reference for is the positive zero crossing of Vin. The average voltage VO across the load in volts is _____ (Round off to 2 decimal....",
+      "concept": "current",
+      "difficulty": "Medium"
+    },
+    {
+      "question": "A 3-phase, star-connected, balanced load is supplied from a 3-phase, 400 V (rms), balanced voltage source with phase sequence R-Y-B, as shown in the figure. If the wattmeter reading is -400 W and the line current is A R = 2 A (rms), then the power factor of the load per phase is (A) Unity (B)",
+      "concept": "current",
+      "difficulty": "Medium"
+    },
+    {
+      "question": "For the three-bus power system shown in the figure, the trip signals to the circuit breakers B1 to B9 are provided by overcurrent relays R1 to R9, respectively, some of which have directional properties also. The necessary condition for the system to be protected for short circuit fault at any part of the system betwee...",
+      "concept": "power",
+      "difficulty": "Medium"
+    }
+  ]
+}

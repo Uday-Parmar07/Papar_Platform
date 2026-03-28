@@ -19,7 +19,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from app.services.exam_service import generate_exam
 from app.services.answer_service import generate_answers, ANSWER_ENABLED_SUBJECTS, SUBJECT_NAMESPACE_MAP
 from app.schemas.exam import Question
-from scripts.generate_answers import generate_answer
 
 
 def generate_complete_exam(
@@ -273,30 +272,50 @@ def generate_from_file(
     
     # Generate answers
     print(f"\n[STEP 2] Generating answers...")
-    answers_list = []
-    failed_count = 0
     
-    for i, question in enumerate(questions, 1):
-        try:
-            print(f"  [{i}/{len(questions)}] {question.get('concept', 'Unknown')}...", end=" ", flush=True)
-            answer_result = generate_answer(
-                question=question.get("question", ""),
-                concept=question.get("concept", "Unknown"),
-                difficulty=question.get("difficulty", "Medium"),
-                namespace=subject
-            )
-            answers_list.append(answer_result)
-            print("✓")
-        except Exception as e:
-            print(f"✗")
+    # Convert dict questions to Question objects
+    question_objects = []
+    for q in questions:
+        question_objects.append(Question(
+            concept=q.get('concept', 'Unknown'),
+            difficulty=q.get('difficulty', 'Medium'),
+            question=q.get('question', '')
+        ))
+    
+    try:
+        # Use the batch answer generation service
+        answer_items = generate_answers(
+            questions=question_objects,
+            subject=subject
+        )
+        
+        # Convert AnswerItem objects to dicts
+        answers_list = []
+        for item in answer_items:
             answers_list.append({
-                "question": question.get("question", ""),
-                "concept": question.get("concept", "Unknown"),
-                "difficulty": question.get("difficulty", "Medium"),
+                "question": item.question,
+                "concept": item.concept,
+                "difficulty": item.difficulty,
+                "answer": item.answer,
+                "context_retrieved": item.context_retrieved
+            })
+        
+        failed_count = sum(1 for a in answers_list if "Error" in a.get("answer", ""))
+        print(f"✓ Generated {len(answers_list)} answers ({len(answers_list) - failed_count} successful)")
+        
+    except Exception as e:
+        print(f"✗ Failed to generate answers: {e}")
+        # Create error answers for all questions
+        answers_list = []
+        for q in questions:
+            answers_list.append({
+                "question": q.get("question", ""),
+                "concept": q.get("concept", "Unknown"),
+                "difficulty": q.get("difficulty", "Medium"),
                 "answer": f"Error: {str(e)}",
                 "context_retrieved": False
             })
-            failed_count += 1
+        failed_count = len(answers_list)
     
     # Save answers
     print(f"\n[STEP 3] Saving results...")

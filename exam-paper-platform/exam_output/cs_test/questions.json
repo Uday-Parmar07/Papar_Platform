@@ -1,0 +1,44 @@
+{
+  "subject": "Computer Science Engineering",
+  "subject_id": "CS 2026",
+  "total_questions": 5,
+  "topics": [
+    "Algorithms",
+    "Compiler Design",
+    "Computer Networks",
+    "Computer Organization and Architecture",
+    "Databases",
+    "Digital Logic",
+    "Engineering Mathematics",
+    "Operating System",
+    "Programming and Data Structures",
+    "Theory of Computation"
+  ],
+  "questions": [
+    {
+      "question": "GATE 2023 Computer Science and Information Technology (CS) Suppose in a web browser, you click on the www.gate-2023.in URL. The browser cache is empty. The IP address for this URL is not cached in your local host, so a DNS lookup is triggered (by the local DNS server deployed on your local host) over the 3-tier DNS hie...",
+      "concept": "Algorithms",
+      "difficulty": "Medium"
+    },
+    {
+      "question": "GATE 2023 Computer Science and Information Technology (CS) Let SLLdel be a function that deletes a node in a singly-linked list given a pointer to the node and a pointer to the head of the list. Similarly, let DLLdel be another function that deletes a node in a doubly-linked list given a pointer to the node and a point...",
+      "concept": "linked lists",
+      "difficulty": "Medium"
+    },
+    {
+      "question": "GATE 2023 Computer Science and Information Technology (CS) An 8-way set associative cache of size 64 KB (1 KB = 1024 bytes) is used in a system with 32-bit address. The address is sub-divided into TAG, INDEX, and BLOCK OFFSET. The number of bits in the TAG is .",
+      "concept": "cache",
+      "difficulty": "Medium"
+    },
+    {
+      "question": "GATE 2023 Computer Science and Information Technology (CS) GATE 2023 Computer Science and Information Technology (CS) Consider the two functions incr and decr shown below. incr(){ wait(s); X = X+1; signal(s); } decr(){ wait(s); X = X-1; signal(s); } There are 5 threads each invoking incr once, and 3 threads each invoki...",
+      "concept": "minimum",
+      "difficulty": "Medium"
+    },
+    {
+      "question": "GATE 2023 Computer Science and Information Technology (CS) Consider a database of fixed-length records, stored as an ordered file. The database has 25,000 records, with each record being 100 bytes, of which the primary key occupies 15 bytes. The data file is block-aligned in that each data record is fully contained wit...",
+      "concept": "binary",
+      "difficulty": "Medium"
+    }
+  ]
+}

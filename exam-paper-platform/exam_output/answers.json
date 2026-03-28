@@ -1,0 +1,78 @@
+{
+  "subject": "Electrical Engineering",
+  "total_questions": 10,
+  "successfully_answered": 10,
+  "failed": 0,
+  "answers": [
+    {
+      "question": "The chopper circuit shown in figure (i) feeds power to a 5 A DC constant current source. The switching frequency of the chopper is 100 kHz. All the components can be assumed to be ideal. The gate signals of switches S1 and S2 are shown in figure (ii). Average voltage across the 5 A current source is (A) 10 V (B) 6 V (C...",
+      "concept": "power",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    },
+    {
+      "question": "Consider a lead compensator of the form K(r ) = 1 + r Z 1 + r Z , > 1, Z > 0 The frequency at which this compensator produces maximum phase lead is 4 rad/s. At this frequency, the gain amplification provided by the controller, assuming asymptotic Bode-magnitude plot of K(r ), is 6 dB. The values of Z , , respectively,....",
+      "concept": "Phase",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    },
+    {
+      "question": "The single phase rectifier consisting of three thyristors T1, T2, T3 and a diode D1 feed power to a 10 A constant current load. T1 and T3 are fired at = 60 and T2 is fired at = 240 . The reference for is the positive zero crossing of Vin. The average voltage VO across the load in volts is _____ (Round off to 2 decimal....",
+      "concept": "Phase",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    },
+    {
+      "question": "707 lagging 3 Phase 400 V Balanced Source 3 Phase Star Connected Balanced Load M L C V Wattmeter + - R Y B IR Electrical Engineering (EE) Page 31 of 42",
+      "concept": "Phase",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    },
+    {
+      "question": "The two-bus power system shown in figure (i) has one alternator supplying a synchronous motor load through a Y- transformer. The positive, negative and zero-sequence diagrams of the system are shown in figures (ii), (iii) and (iv), respectively. All reactances in the sequence diagrams are in p.u. For a bolted line- to-...",
+      "concept": "Phase",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    },
+    {
+      "question": "The bus admittance (Ybus) matrix of a 3-bus power system is given below. 1 2 3 1 2 3 [ -i 15 i 10 i 5 i 10 -i 13.5 i 4 i 5 i 4 -i 8 ] Considering that there is no shunt inductor connected to any of the buses, which of the following can NOT be true? (A) Line charging capacitor of finite value is present in all three lin...",
+      "concept": "power",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    },
+    {
+      "question": "A 3-phase, star-connected, balanced load is supplied from a 3-phase, 400 V (rms), balanced voltage source with phase sequence R-Y-B, as shown in the figure. If the wattmeter reading is -400 W and the line current is A R = 2 A (rms), then the power factor of the load per phase is (A) Unity (B)",
+      "concept": "power",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    },
+    {
+      "question": "The admittance parameters of the passive resistive two-port network shown in the figure are x 11 = 5 M , x 22 = 1 M , x 12 = x 21 = -2.5 M The power delivered to the load resistor RL in Watt is __________ (Round off to 2 decimal places). i = sin1000t a 10 10 4ix ix 100 F 10 mH b - j10 j10 Electrical Engineering (EE) Pa...",
+      "concept": "power",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    },
+    {
+      "question": "For the three-bus power system shown in the figure, the trip signals to the circuit breakers B1 to B9 are provided by overcurrent relays R1 to R9, respectively, some of which have directional properties also. The necessary condition for the system to be protected for short circuit fault at any part of the system betwee...",
+      "concept": "power",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    },
+    {
+      "question": "The expressions of fuel cost of two thermal generating units as a function of the respective power generation M G1 and M G2 are given as A 1(M G1) = 0.1Z M G1 2 + 40 M G1 + 120 M r /hn r r 0 MV M G1 350 MV A 2(M G2) = 0.2M G2 2 + 30 M G2 + 100 M r /hn r r 0 MV M G2 300 MV where a is a constant. For a given value of a,....",
+      "concept": "power",
+      "difficulty": "Medium",
+      "answer": "Error generating answer: Error code: 401 - {'error': {'message': 'Invalid API Key', 'type': 'invalid_request_error', 'code': 'invalid_api_key'}}",
+      "context_retrieved": false
+    }
+  ]
+}
