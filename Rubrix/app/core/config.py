@@ -15,9 +15,9 @@ class Settings(BaseSettings):
 	api_v1_prefix: str = "/api/v1"
 	project_name: str = "Exam Paper Platform"
 	allow_origins: List[AnyHttpUrl] = []
-	database_url: str = "sqlite:///./exam_platform.db"
+	database_url: str = "sqlite:///./Rubrix.db"
 	enable_local_db_fallback: bool = True
-	local_fallback_database_url: str = "sqlite:///./exam_platform.db"
+	local_fallback_database_url: str = "sqlite:///./Rubrix.db"
 	jwt_secret_key: str = "change-this-in-production"
 	jwt_algorithm: str = "HS256"
 	access_token_expire_minutes: int = 60 * 24

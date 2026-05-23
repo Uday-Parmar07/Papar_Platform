@@ -1,6 +1,6 @@
 from pathlib import Path
 
-BASE_DIR = Path("exam-paper-platform")
+BASE_DIR = Path("Rubrix")
 
 STRUCTURE = {
     "app": {

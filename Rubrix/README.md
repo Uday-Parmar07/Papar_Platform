@@ -1,4 +1,4 @@
-# Exam Paper Platform
+# Rubrix
 
 ## Overview
 
@@ -84,7 +84,7 @@ curl -X POST http://localhost:8000/api/v1/exam/answers \
 ## 🏗️ Architecture
 
 ```
-exam-paper-platform/
+Rubrix/
 ├── app/
 │   ├── api/v1/          # FastAPI endpoints
 │   ├── services/        # Business logic (exam, answer generation)
