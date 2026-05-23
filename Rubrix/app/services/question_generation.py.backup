@@ -1,0 +1,684 @@
+"""
+Per-Topic Question Generation Pipeline
+
+This module implements a robust question generation system that:
+1. Retrieves context per-topic with hard budget guarantees
+2. Allocates question slots evenly across topics
+3. Generates questions per-topic with explicit numbered prompts
+4. Implements retry logic with shortfall detection
+5. Validates and auto-fixes the final question set
+
+This ensures all selected topics are covered and the exact requested
+number of questions is always returned.
+"""
+
+from dataclasses import dataclass
+from typing import List, Dict, Optional
+import re
+import json
+from groq import Groq
+import os
+from dotenv import load_dotenv
+
+from app.rag.vector_store import PineconeVectorStore
+from app.graph.queries import get_generation_context
+
+load_dotenv()
+
+# Groq client for LLM generation
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+MODEL_NAME = "llama-3.3-70b-versatile"
+
+
+# ===============================
+# 1. Per-Topic Retrieval with Hard Budget
+# ===============================
+
+def retrieve_per_topic(
+    topics: List[str],
+    subject: str,
+    chunks_per_topic: int = 5,
+    graph_chunks_per_topic: int = 3,
+    max_graph_hops: int = 2,
+) -> Dict[str, List[str]]:
+    """
+    Retrieve context for each topic independently with hard budget.
+    
+    Guarantees every selected topic has context before generation begins.
+    No topic is skipped due to embedding dominance from other topics.
+    
+    Args:
+        topics: List of topic names to retrieve context for
+        subject: Subject name for filtering
+        chunks_per_topic: Number of chunks to retrieve from Pinecone per topic
+        graph_chunks_per_topic: Number of chunks to retrieve from graph per topic
+        max_graph_hops: Maximum graph traversal hops
+        
+    Returns:
+        Dictionary mapping topic names to lists of context chunks
+    """
+    topic_context_map: Dict[str, List[str]] = {}
+    
+    for topic in topics:
+        context_chunks: List[str] = []
+        
+        # Try Pinecone retrieval with topic filter
+        try:
+            vector_store = PineconeVectorStore()
+            # Use topic as metadata filter
+            results = vector_store.query(
+                query_text=topic,
+                top_k=chunks_per_topic,
+                namespace=subject,
+                filter={"topic": topic}  # Metadata filter for topic
+            )
+            
+            for result in results:
+                if isinstance(result, dict):
+                    chunk = result.get("text", "")
+                    if chunk:
+                        context_chunks.append(chunk)
+                elif hasattr(result, "metadata"):
+                    chunk = result.metadata.get("text", "")
+                    if chunk:
+                        context_chunks.append(chunk)
+        except Exception as e:
+            print(f"Pinecone retrieval failed for topic '{topic}': {e}")
+        
+        # Try graph retrieval as fallback/supplement
+        try:
+            graph_context = get_generation_context(
+                concept=topic,
+                subject=subject,
+                topics=[topic],
+                difficulty="Medium",
+                limit=graph_chunks_per_topic
+            )
+            
+            # Extract relevant context from graph result
+            if graph_context:
+                prior_questions = graph_context.get("prior_questions", [])
+                for pq in prior_questions[:graph_chunks_per_topic]:
+                    if isinstance(pq, dict):
+                        text = pq.get("text", "")
+                        if text and text not in context_chunks:
+                            context_chunks.append(text)
+        except Exception as e:
+            print(f"Graph retrieval failed for topic '{topic}': {e}")
+        
+        # Ensure we have at least some context
+        if not context_chunks:
+            context_chunks.append(f"Core concepts and principles related to {topic} in {subject}.")
+        
+        topic_context_map[topic] = context_chunks[:chunks_per_topic + graph_chunks_per_topic]
+    
+    return topic_context_map
+
+
+# ===============================
+# 2. Question Allocation Across Topics
+# ===============================
+
+def allocate_questions(
+    topics: List[str],
+    total_questions: int
+) -> Dict[str, int]:
+    """
+    Distribute total questions evenly across topics.
+    
+    Uses floor division + remainder distribution so that no questions
+    are lost and the total is always exact.
+    
+    Example: 5 topics, 12 questions → [3, 3, 2, 2, 2]
+    
+    Args:
+        topics: List of topic names
+        total_questions: Total number of questions to generate
+        
+    Returns:
+        Dictionary mapping topic names to their allocated question count
+        Sum of all values always equals total_questions exactly
+    """
+    if not topics:
+        return {}
+    
+    num_topics = len(topics)
+    base_count = total_questions // num_topics
+    remainder = total_questions % num_topics
+    
+    allocation: Dict[str, int] = {}
+    
+    # Distribute base count to all topics
+    for topic in topics:
+        allocation[topic] = base_count
+    
+    # Distribute remainder to first N topics
+    for i in range(remainder):
+        allocation[topics[i]] += 1
+    
+    return allocation
+
+
+# ===============================
+# 3. Per-Topic LLM Generation with Numbered Prompts
+# ===============================
+
+def build_question_prompt(
+    topic: str,
+    context: str,
+    count: int,
+    subject: str,
+    already_generated: Optional[List[str]] = None
+) -> str:
+    """
+    Build a numbered prompt for generating exactly count questions.
+    
+    The prompt uses a numbered format (Q1, Q2, ... Q{count}) as a checklist signal
+    to ensure the model generates the exact number requested.
+    
+    Args:
+        topic: Topic to generate questions for
+        context: Context text for the topic
+        count: Exact number of questions to generate
+        subject: Subject name
+        already_generated: List of already generated questions to avoid duplicates
+        
+    Returns:
+        Formatted prompt string
+    """
+    already_generated_text = ""
+    if already_generated:
+        already_generated_text = "\n\nALREADY GENERATED (DO NOT REPEAT):\n" + "\n".join(
+            f"- {q}" for q in already_generated
+        )
+    
+    context_text = context if context else f"Core concepts related to {topic}."
+    
+    return f"""SYSTEM:
+You are a strict GATE {subject} examiner.
+
+TOPIC:
+{topic}
+
+CONTEXT:
+{context_text}
+
+TASK:
+Generate EXACTLY {count} exam-quality GATE {subject} questions on the topic "{topic}".
+
+CONSTRAINTS:
+- You MUST generate exactly {count} questions - no fewer, no more
+- Number your questions as Q1, Q2, Q3, ... up to Q{count}
+- Each question should be unique and test different aspects of the topic
+- Questions should be at GATE exam level (conceptual, numerical, or application-based)
+- Each question should be self-contained with necessary context and values
+- Do NOT include solutions or explanations
+- Do NOT mention marks explicitly
+- Use standard GATE exam language and terminology
+- If context is insufficient, generate simpler conceptual questions rather than stopping early
+{already_generated_text}
+
+OUTPUT FORMAT:
+Q1: [question text]
+Q2: [question text]
+Q3: [question text]
+...
+Q{count}: [question text]
+
+Generate exactly {count} questions now:"""
+
+
+def generate_questions_for_topic(
+    topic: str,
+    context: str,
+    required_count: int,
+    subject: str,
+    already_generated: Optional[List[str]] = None
+) -> List[str]:
+    """
+    Generate questions for a single topic using LLM.
+    
+    Args:
+        topic: Topic to generate questions for
+        context: Context text for the topic
+        required_count: Number of questions to generate
+        subject: Subject name
+        already_generated: List of already generated questions to avoid duplicates
+        
+    Returns:
+        List of generated question strings
+    """
+    prompt = build_question_prompt(
+        topic=topic,
+        context=context,
+        count=required_count,
+        subject=subject,
+        already_generated=already_generated
+    )
+    
+    try:
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=[
+                {
+                    "role": "system",
+                    "content": f"You are a strict GATE {subject} examiner.",
+                },
+                {
+                    "role": "user",
+                    "content": prompt,
+                },
+            ],
+            temperature=0.7,
+            max_tokens=2000,
+            top_p=0.95,
+        )
+        
+        response_text = response.choices[0].message.content.strip()
+        
+        # Parse numbered questions from response
+        questions = parse_numbered_questions(response_text, required_count)
+        
+        return questions
+        
+    except Exception as e:
+        print(f"LLM generation failed for topic '{topic}': {e}")
+        return []
+
+
+def parse_numbered_questions(text: str, expected_count: int) -> List[str]:
+    """
+    Parse numbered questions from LLM response.
+    
+    Args:
+        text: LLM response text
+        expected_count: Expected number of questions
+        
+    Returns:
+        List of parsed question strings
+    """
+    questions: List[str] = []
+    
+    # Try to match Q1:, Q2:, etc. pattern
+    pattern = r'Q\d+:\s*(.*?)(?=\nQ\d+:|$)'
+    matches = re.findall(pattern, text, re.DOTALL)
+    
+    if matches:
+        questions = [q.strip() for q in matches if q.strip()]
+    else:
+        # Fallback: split by newlines and filter
+        lines = [line.strip() for line in text.split('\n') if line.strip()]
+        questions = lines[:expected_count]
+    
+    return questions[:expected_count]
+
+
+# ===============================
+# 4. Retry Loop with Shortfall Detection
+# ===============================
+
+def generate_with_retry(
+    topic: str,
+    context: str,
+    required_count: int,
+    subject: str,
+    max_attempts: int = 3
+) -> List[str]:
+    """
+    Generate questions with retry logic for shortfall detection.
+    
+    After each generation call, checks if returned count matches required count.
+    If there is a shortfall, retries with the shortfall count only.
+    Passes already-generated questions to avoid duplication.
+    Allows maximum of 3 retry attempts.
+    On 3rd failed attempt, triggers fallback generation.
+    
+    Args:
+        topic: Topic to generate questions for
+        context: Context text for the topic
+        required_count: Number of questions required
+        subject: Subject name
+        max_attempts: Maximum retry attempts
+        
+    Returns:
+        List of exactly required_count questions
+    """
+    all_questions: List[str] = []
+    
+    for attempt in range(max_attempts):
+        shortfall = required_count - len(all_questions)
+        
+        if shortfall <= 0:
+            break
+        
+        questions = generate_questions_for_topic(
+            topic=topic,
+            context=context,
+            required_count=shortfall,
+            subject=subject,
+            already_generated=all_questions
+        )
+        
+        all_questions.extend(questions)
+        
+        if len(all_questions) >= required_count:
+            break
+    
+    # If still shortfall after retries, use fallback
+    if len(all_questions) < required_count:
+        shortfall = required_count - len(all_questions)
+        fallback_questions = generate_fallback_questions(topic, shortfall)
+        all_questions.extend(fallback_questions)
+    
+    return all_questions[:required_count]
+
+
+def generate_fallback_questions(
+    topic: str,
+    shortfall: int
+) -> List[str]:
+    """
+    Generate generic topic-level questions as last resort.
+    
+    This function is called when the LLM fails to generate the required
+    number of questions after 3 retry attempts. It uses pre-defined templates
+    to ensure the system always returns the exact number of questions requested,
+    preventing API failures due to question count shortfalls.
+    
+    The fallback questions are generic but still topic-relevant, covering
+    different cognitive levels: explanation, analysis, comparison, design,
+    and calculation. This ensures exam-relevant questions even when the
+    LLM generation pipeline encounters issues.
+    
+    Args:
+        topic: Topic name to insert into generic templates
+        shortfall: Number of questions needed to fill the gap
+        
+    Returns:
+        List of generic fallback questions, exactly shortfall in count
+    """
+    fallback_templates = [
+        f"Explain the core principles of {topic} and derive the governing equations.",
+        f"Analyze the key characteristics of {topic} in practical applications.",
+        f"Compare different approaches to {topic} and discuss their advantages.",
+        f"Design a system involving {topic} and explain the design considerations.",
+        f"Calculate the performance metrics for a {topic} system with given parameters.",
+    ]
+    
+    questions: List[str] = []
+    for i in range(shortfall):
+        template = fallback_templates[i % len(fallback_templates)]
+        questions.append(template)
+    
+    return questions
+
+
+# ===============================
+# 5. Post-Generation Validation and Auto-Fix
+# ===============================
+
+@dataclass
+class ValidationReport:
+    """Report from question set validation."""
+    count_ok: bool
+    count_shortfall: int
+    missing_topics: List[str]
+    overrepresented_topics: List[str]
+    passed: bool
+
+
+class QuestionSetValidator:
+    """Validates and auto-fixes question sets."""
+    
+    def __init__(self, max_overrepresentation_ratio: float = 1.5):
+        """
+        Args:
+            max_overrepresentation_ratio: Max ratio of questions per topic vs average
+        """
+        self.max_overrepresentation_ratio = max_overrepresentation_ratio
+    
+    def validate(
+        self,
+        questions: List[Dict],
+        requested_topics: List[str],
+        requested_count: int
+    ) -> ValidationReport:
+        """
+        Validate the generated question set.
+        
+        Checks:
+        - Total question count matches requested count exactly
+        - Every selected topic appears at least once
+        - No single topic exceeds (total / num_topics * 1.5) questions
+        
+        Args:
+            questions: List of question dicts with 'topic' field
+            requested_topics: Topics that were requested
+            requested_count: Total questions requested
+            
+        Returns:
+            ValidationReport with validation results
+        """
+        count_ok = len(questions) == requested_count
+        count_shortfall = requested_count - len(questions)
+        
+        # Check topic coverage
+        question_topics = set(q.get("topic", "") for q in questions)
+        missing_topics = [t for t in requested_topics if t not in question_topics]
+        
+        # Check overrepresentation
+        topic_counts: Dict[str, int] = {}
+        for q in questions:
+            topic = q.get("topic", "")
+            topic_counts[topic] = topic_counts.get(topic, 0) + 1
+        
+        avg_per_topic = requested_count / len(requested_topics) if requested_topics else 0
+        max_allowed = int(avg_per_topic * self.max_overrepresentation_ratio) if avg_per_topic > 0 else requested_count
+        
+        overrepresented_topics = [
+            topic for topic, count in topic_counts.items()
+            if count > max_allowed
+        ]
+        
+        passed = count_ok and not missing_topics and not overrepresented_topics
+        
+        return ValidationReport(
+            count_ok=count_ok,
+            count_shortfall=count_shortfall,
+            missing_topics=missing_topics,
+            overrepresented_topics=overrepresented_topics,
+            passed=passed
+        )
+    
+    def fix(
+        self,
+        questions: List[Dict],
+        report: ValidationReport,
+        topic_context_map: Dict[str, List[str]],
+        subject: str
+    ) -> List[Dict]:
+        """
+        Auto-fix validation failures.
+        
+        - Generates additional questions for missing topics
+        - Fills count shortfall from underrepresented topics
+        - Trims overrepresented topics down to allowed maximum
+        
+        Args:
+            questions: Current list of question dicts
+            report: Validation report from validate()
+            topic_context_map: Context chunks per topic
+            subject: Subject name
+            
+        Returns:
+            Fixed list of question dicts
+        """
+        fixed_questions = questions.copy()
+        
+        # Fix missing topics
+        for topic in report.missing_topics:
+            context = "\n".join(topic_context_map.get(topic, [""]))
+            new_questions = generate_with_retry(
+                topic=topic,
+                context=context,
+                required_count=1,
+                subject=subject
+            )
+            for q in new_questions[:1]:
+                fixed_questions.append({
+                    "question": q,
+                    "topic": topic,
+                    "concept": topic,
+                    "difficulty": "Medium"
+                })
+        
+        # Fix count shortfall
+        if report.count_shortfall > 0:
+            # Use topics with fewest questions
+            topic_counts: Dict[str, int] = {}
+            for q in fixed_questions:
+                topic = q.get("topic", "")
+                topic_counts[topic] = topic_counts.get(topic, 0) + 1
+            
+            # Sort topics by count (ascending)
+            sorted_topics = sorted(topic_counts.keys(), key=lambda t: topic_counts[t])
+            
+            for topic in sorted_topics:
+                if report.count_shortfall <= 0:
+                    break
+                
+                context = "\n".join(topic_context_map.get(topic, [""]))
+                new_questions = generate_with_retry(
+                    topic=topic,
+                    context=context,
+                    required_count=1,
+                    subject=subject
+                )
+                for q in new_questions[:1]:
+                    fixed_questions.append({
+                        "question": q,
+                        "topic": topic,
+                        "concept": topic,
+                        "difficulty": "Medium"
+                    })
+                report.count_shortfall -= 1
+        
+        # Fix overrepresentation
+        if report.overrepresented_topics:
+            topic_counts: Dict[str, int] = {}
+            for q in fixed_questions:
+                topic = q.get("topic", "")
+                topic_counts[topic] = topic_counts.get(topic, 0) + 1
+            
+            avg_per_topic = len(fixed_questions) / len(topic_counts) if topic_counts else 0
+            max_allowed = int(avg_per_topic * self.max_overrepresentation_ratio) if avg_per_topic > 0 else len(fixed_questions)
+            
+            # Trim overrepresented topics
+            filtered_questions = []
+            for q in fixed_questions:
+                topic = q.get("topic", "")
+                if topic in report.overrepresented_topics:
+                    if topic_counts.get(topic, 0) > max_allowed:
+                        topic_counts[topic] -= 1
+                        continue
+                filtered_questions.append(q)
+            
+            fixed_questions = filtered_questions
+        
+        return fixed_questions
+
+
+# ===============================
+# 6. Master Orchestrator Function
+# ===============================
+
+def generate_exam_questions(
+    topics: List[str],
+    subject: str,
+    total_questions: int,
+    chunks_per_topic: int = 5,
+    graph_chunks_per_topic: int = 3
+) -> List[Dict]:
+    """
+    Guaranteed to return exactly total_questions questions,
+    with coverage across all selected topics.
+    
+    Pipeline:
+    1. retrieve_per_topic → topic_context_map
+    2. allocate_questions → question_allocation
+    3. generate_with_retry per topic → raw_questions
+    4. QuestionSetValidator.validate + fix → final_questions
+    5. Return final_questions
+    
+    Args:
+        topics: List of topic names to generate questions for
+        subject: Subject name
+        total_questions: Total number of questions to generate
+        chunks_per_topic: Number of chunks to retrieve from Pinecone per topic
+        graph_chunks_per_topic: Number of chunks to retrieve from graph per topic
+        
+    Returns:
+        List of question dicts with keys: question, topic, concept, difficulty
+        Guaranteed to have exactly total_questions questions
+    """
+    if not topics:
+        return []
+    
+    # Step 1: Retrieve context per topic
+    topic_context_map = retrieve_per_topic(
+        topics=topics,
+        subject=subject,
+        chunks_per_topic=chunks_per_topic,
+        graph_chunks_per_topic=graph_chunks_per_topic
+    )
+    
+    # Step 2: Allocate questions across topics
+    question_allocation = allocate_questions(
+        topics=topics,
+        total_questions=total_questions
+    )
+    
+    # Step 3: Generate questions per topic with retry
+    raw_questions: List[Dict] = []
+    for topic in topics:
+        allocated_count = question_allocation.get(topic, 0)
+        if allocated_count == 0:
+            continue
+        
+        context = "\n".join(topic_context_map.get(topic, [""]))
+        questions = generate_with_retry(
+            topic=topic,
+            context=context,
+            required_count=allocated_count,
+            subject=subject
+        )
+        
+        for q in questions:
+            raw_questions.append({
+                "question": q,
+                "topic": topic,
+                "concept": topic,
+                "difficulty": "Medium"
+            })
+    
+    # Step 4: Validate and auto-fix
+    validator = QuestionSetValidator()
+    report = validator.validate(
+        questions=raw_questions,
+        requested_topics=topics,
+        requested_count=total_questions
+    )
+    
+    if not report.passed:
+        raw_questions = validator.fix(
+            questions=raw_questions,
+            report=report,
+            topic_context_map=topic_context_map,
+            subject=subject
+        )
+    
+    # Final count check
+    if len(raw_questions) > total_questions:
+        raw_questions = raw_questions[:total_questions]
+    
+    return raw_questions

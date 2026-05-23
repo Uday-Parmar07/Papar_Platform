@@ -20,6 +20,7 @@ from app.graph.queries import (
 	get_reference_question_by_text_match,
 	get_reference_question_pool,
 )
+from app.services.question_generation import generate_exam_questions
 
 
 @lru_cache()
@@ -553,22 +554,37 @@ def generate_exam(
 		random.shuffle(question_pool)
 	raw_question_pool = list(question_pool)
 
-	try:
-		graph = _compiled_graph()
-		result = graph.invoke({
-			"total_questions": total_questions,
-			"cutoff_year": cutoff_year,
-			"retry_count": 0,
-			"final_questions": [],
-			"failed_questions": [],
-			"subject": subject_id,
-			"subject_label": subject_label,
-			"topics": topics_filter,
-			"topics_selected": selected_topics,
-		})
-		generated_questions = result.get("final_questions") or result.get("validated_questions") or []
-	except Exception:
-		generated_questions = []
+	# Use new per-topic generation pipeline when topics are explicitly selected
+	if requested_topics:
+		try:
+			generated_questions = generate_exam_questions(
+				topics=selected_topics,
+				subject=subject_label,
+				total_questions=total_questions,
+				chunks_per_topic=5,
+				graph_chunks_per_topic=3
+			)
+		except Exception as e:
+			print(f"Per-topic generation failed, falling back to graph: {e}")
+			generated_questions = []
+	else:
+		# Use existing graph-based generation for full subject generation
+		try:
+			graph = _compiled_graph()
+			result = graph.invoke({
+				"total_questions": total_questions,
+				"cutoff_year": cutoff_year,
+				"retry_count": 0,
+				"final_questions": [],
+				"failed_questions": [],
+				"subject": subject_id,
+				"subject_label": subject_label,
+				"topics": topics_filter,
+				"topics_selected": selected_topics,
+			})
+			generated_questions = result.get("final_questions") or result.get("validated_questions") or []
+		except Exception:
+			generated_questions = []
 
 	questions: List[Question] = []
 

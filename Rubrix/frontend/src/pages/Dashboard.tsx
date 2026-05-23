@@ -32,6 +32,9 @@ export default function Dashboard() {
   const [error, setError] = useState('')
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [previewExpanded, setPreviewExpanded] = useState(false)
+  const [latexView, setLatexView] = useState(false)
 
   // Load subjects on mount
   useEffect(() => {
@@ -183,7 +186,12 @@ export default function Dashboard() {
             mobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           }`}
         >
-          <Sidebar history={history} onSelectHistory={handleSelectHistory} />
+          <Sidebar 
+            history={history} 
+            onSelectHistory={handleSelectHistory}
+            collapsed={sidebarCollapsed}
+            onToggleCollapse={() => setSidebarCollapsed(!sidebarCollapsed)}
+          />
         </div>
 
         {/* Main Content */}
@@ -225,6 +233,10 @@ export default function Dashboard() {
           questions={generatedQuestions}
           subject={selectedSubject}
           loading={loading}
+          expanded={previewExpanded}
+          onToggleExpand={() => setPreviewExpanded(!previewExpanded)}
+          latexView={latexView}
+          onToggleLatexView={() => setLatexView(!latexView)}
         />
       </div>
     </div>
